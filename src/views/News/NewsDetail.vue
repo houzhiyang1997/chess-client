@@ -19,9 +19,26 @@
         <van-button type="success" size="small">关注</van-button>
       </div>
     </div>
-    <div class="detail-main markdown-body">
+    <div class="detail-main content-style">
       <img class="img-header" :src="detail[0].img" />
       <div class="content" v-html="detail[0].content"></div>
+    </div>
+    <div class="footer">
+      <div class="main">
+        <van-search
+          class="search"
+          clearable
+          shape="round"
+          background="rgba(0,0,0,0)"
+          v-model="value"
+          placeholder="兴趣内容"
+        />
+        <div class="icon">
+          <van-icon name="coupon-o" size="1.5rem" />
+          <van-icon name="star-o" size="1.2rem" />
+          <van-icon name="share-o" size="1.5rem" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +79,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/github.css';
+// @import '@/assets/github.css';
+
+/deep/ .content-style p {
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-indent: 2em;
+  text-align: justify; //两端对齐
+}
 
 .detail-container {
   padding: 0.625rem 1rem;
@@ -94,11 +118,34 @@ export default {
   }
   .detail-main {
     padding: 0.625rem 0;
+    padding-bottom: 1.875rem;
     .img-header {
       padding-bottom: 0.625rem;
     }
     img {
       width: 100%;
+    }
+  }
+  .footer {
+    z-index: 2;
+    background: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    .main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .search {
+        width: 15rem;
+      }
+      .icon {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
     }
   }
 }
