@@ -1,30 +1,35 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <router-view></router-view>
+  <!-- 底部导航栏 -->
+  <Footer v-if="store.state.isFooterShow"></Footer>
 </template>
 
+<script>
+import Footer from '@/components/Footer.vue'
+import { useStore } from 'vuex'
+export default {
+  name: 'myApp',
+  components: { Footer },
+  setup() {
+    const store = useStore()
+    return { store }
+  }
+}
+</script>
+
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  // font-family: 'Microsoft YaHe';
+  box-sizing: border-box;
 }
 
-nav {
-  padding: 30px;
+html,
+body {
+  width: 100%;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+  touch-action: none;
+  touch-action: pan-y;
 }
 </style>
