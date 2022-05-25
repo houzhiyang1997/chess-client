@@ -5,6 +5,7 @@ const routes = [
   { path: '/news', component: () => import('@/views/News.vue') },
   { path: '/newsdetail/:id', component: () => import('@/views/News/NewsDetail.vue'), props: true },
   { path: '/team', component: () => import('@/views/Team.vue') },
+  { path: '/chessinfo/:id', component: () => import('@/views/Team/ChessInfo.vue'), props: true },
   { path: '/databoard', component: () => import('@/views/DataBoard.vue') },
   { path: '/infolib', component: () => import('@/views/InfoLib.vue') },
   { path: '/aboutme', component: () => import('@/views/AboutMe.vue') }

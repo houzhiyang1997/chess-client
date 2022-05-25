@@ -6,7 +6,7 @@
         clearable
         shape="round"
         background="rgba(0,0,0,0)"
-        v-model="value"
+        v-model="searchContent"
         placeholder="兴趣内容"
       />
       <div class="title">最新资讯</div>
@@ -20,8 +20,8 @@ import { ref } from 'vue'
 export default {
   setup() {
     // 双向绑定查询框中的值
-    const value = ref('')
-    return { value }
+    const searchContent = ref('')
+    return { searchContent }
   }
 }
 </script>

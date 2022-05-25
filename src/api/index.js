@@ -16,7 +16,15 @@ const getDetailById = id => {
   })
 }
 
+const getTeams = () => {
+  return http({
+    method: 'GET',
+    url: '/getteams'
+  })
+}
+
 export default {
   getNews,
-  getDetailById
+  getDetailById,
+  getTeams
 }

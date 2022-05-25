@@ -1,6 +1,6 @@
 <template>
   <div class="detail-container" v-if="detail[0]">
-    <van-nav-bar title="文章详情" @click-left="router.back()">
+    <van-nav-bar fixed title="文章详情" @click-left="router.back()">
       <template #left>
         <van-icon name="arrow-left" color="grey" size="1.5rem" />
       </template>
@@ -30,7 +30,7 @@
           clearable
           shape="round"
           background="rgba(0,0,0,0)"
-          v-model="value"
+          v-model="comment"
           placeholder="兴趣内容"
         />
         <div class="icon">
@@ -57,6 +57,7 @@ export default {
     hiddenFooter()
     const router = useRouter()
     const detail = ref([])
+    const comment = ref('')
 
     onMounted(() => {
       getDetail(props.id)
@@ -70,7 +71,7 @@ export default {
 
     return {
       router,
-
+      comment,
       getDetail,
       detail
     }
@@ -81,7 +82,7 @@ export default {
 <style lang="less" scoped>
 // @import '@/assets/github.css';
 
-/deep/ .content-style p {
+:deep(.content-style p) {
   margin-top: 0;
   margin-bottom: 16px;
   text-indent: 2em;
@@ -90,11 +91,8 @@ export default {
 
 .detail-container {
   padding: 0.625rem 1rem;
-  /deep/ .van-nav-bar__left,
-  /deep/ .van-nav-bar__right {
-    padding: 0;
-  }
   .detail-top {
+    padding-top: 2.75rem;
     .info {
       padding: 0.625rem 0;
       display: flex;

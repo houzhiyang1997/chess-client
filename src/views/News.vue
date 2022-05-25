@@ -4,7 +4,7 @@
     <news-top></news-top>
     <!-- news list -->
     <van-list class="newlist" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <news-item v-for="item in newsList" :key="item.id" :news="item" @click="handleClick(item.id)"></news-item>
+      <news-item v-for="item in newsList" :key="item.id" :news="item" @click="handleClick(item.id)"> </news-item>
     </van-list>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
     // 获取新闻列表
     const getNews = async () => {
       const { data: res } = await api.getNews()
-      console.log(res)
+      // console.log(res)
       newsList.value = res.news
     }
     // 处理点击事件 跳转详情页

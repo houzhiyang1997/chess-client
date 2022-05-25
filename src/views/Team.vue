@@ -1,12 +1,99 @@
 <template>
-  <div class="team-container"></div>
+  <div class="team-container">
+    <div class="top">霓虹之夜</div>
+    <div class="content">
+      <div class="content-top">
+        <div class="title">推荐阵容</div>
+        <div class="info">版本:12.9 赛季:S6.5</div>
+      </div>
+      <div class="main">
+        <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <team-item v-for="item in teamList" :key="item" :info="item"></team-item>
+        </van-list>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import teamItem from '@/components/Team/TeamItem.vue'
+import api from '@/api/index'
+import { ref } from 'vue'
+
 export default {
-  name: 'Team',
-  components: {}
+  name: 'team',
+  components: {
+    teamItem
+  },
+  setup() {
+    const teamList = ref([])
+    const loading = ref(false)
+    const finished = ref(false)
+
+    const getTeam = async () => {
+      const { data: res } = await api.getTeams()
+      console.log(res)
+      teamList.value = res.teams
+    }
+
+    const onLoad = () => {
+      // 异步更新数据
+      getTeam()
+      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      loading.value = false
+      // 数据全部加载完成
+      finished.value = true
+    }
+
+    return {
+      teamList,
+      onLoad,
+      loading,
+      finished,
+      getTeam
+    }
+  }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.team-container {
+  padding: 0.625rem 0.625rem;
+  .top {
+    text-align: center;
+    background: #31c27c;
+    height: 2rem;
+    line-height: 2rem;
+    color: white;
+    border-radius: 0.3125rem;
+    font-weight: 600;
+    font-size: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .content {
+    padding-top: 1.375rem;
+    .content-top {
+      margin-top: 0.625rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      border-left: 0.3125rem solid #31c27c;
+      display: flex;
+      align-items: center;
+      .title {
+        padding-left: 0.3125rem;
+      }
+      .info {
+        padding-left: 0.625rem;
+        font-size: 0.75rem;
+        color: grey;
+      }
+    }
+  }
+  .main {
+    padding-top: 0.625rem;
+  }
+}
+</style>
