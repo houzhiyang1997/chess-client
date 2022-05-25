@@ -1,9 +1,12 @@
 <template>
-  <dir>chessinfo</dir>
+  <div>chessinfo---{{ id }}</div>
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'chessInfo',
+  props: ['id']
+}
 </script>
 
 <style></style>

@@ -1,13 +1,6 @@
 <template>
   <div class="detail-container" v-if="detail[0]">
-    <van-nav-bar fixed title="文章详情" @click-left="router.back()">
-      <template #left>
-        <van-icon name="arrow-left" color="grey" size="1.5rem" />
-      </template>
-      <template #right>
-        <van-icon name="setting-o" color="grey" size="1.5rem" />
-      </template>
-    </van-nav-bar>
+    <detail-header title="文章详情"></detail-header>
     <div class="detail-top">
       <h3>{{ detail[0].title }}</h3>
       <div class="info">
@@ -44,6 +37,7 @@
 </template>
 
 <script>
+import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
 import { hiddenFooter } from '@/hooks/useHidden.js'
 import { onMounted, ref } from 'vue'
@@ -52,6 +46,9 @@ import { useRouter } from 'vue-router'
 export default {
   name: 'newsDetail',
   props: ['id'],
+  components: {
+    detailHeader
+  },
   setup(props) {
     // 控制footer隐藏与否
     hiddenFooter()

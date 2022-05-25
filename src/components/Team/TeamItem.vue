@@ -31,7 +31,7 @@ export default {
     const hardValue = ref(props.info.hard)
     const chessList = props.info.chessList.split(',')
     const handleClickImg = index => {
-      router.push(`/chessinfo/id=${chessList[index]}`)
+      router.push(`/chessinfo/${chessList[index]}`)
     }
 
     return { hardValue, handleClickImg }
