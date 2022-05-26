@@ -10,8 +10,11 @@
         </div>
         <div class="right">
           <div class="title">{{ chess[0].title + '  ' + chess[0].displayName }}</div>
-          <div class="race">
-            <div class="raceinfo" v-for="(race, index) in computeRace" :key="index">{{ race }}</div>
+          <div class="top-race">
+            <div class="raceinfo" v-for="(race, index) in computeRace" :key="index">
+              <img :src="getRaceImg()[index]" />
+              <div>{{ race }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -51,19 +54,26 @@
       </div>
       <div class="skill-detail">{{ chess[0].skillDetail }}</div>
     </div>
-    <div class="race">
-      <div class="title">羁绊—执法官</div>
+    <div class="race" v-for="(race, index) in raceInfo" :key="index">
+      <div class="title">羁绊—{{ race.name }}</div>
       <div class="introduce">
-        暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰
+        {{ race.introduce }}
       </div>
-      <div class="level">
-        <div class="num">3</div>
-        <div class="detail">
-          暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰暗示法散发发顺丰
-        </div>
+      <div class="level" v-for="(lev, index) in computeLevel(race.level)" :key="index">
+        <div class="num">{{ lev.num }}</div>
+        <div class="detail">{{ lev.info }}</div>
       </div>
     </div>
-    <div class="job"></div>
+    <div class="job" v-for="(job, index) in jobInfo" :key="index">
+      <div class="title">职业—{{ job.name }}</div>
+      <div class="introduce">
+        {{ job.introduce }}
+      </div>
+      <div class="level" v-for="(lev, index) in computeLevel(job.level)" :key="index">
+        <div class="num">{{ lev.num }}</div>
+        <div class="detail">{{ lev.info }}</div>
+      </div>
+    </div>
     <div class="equip"></div>
   </div>
 </template>
@@ -80,8 +90,12 @@ export default {
   },
   setup(props) {
     const chess = ref([])
-    onMounted(() => {
-      getChess()
+    const raceInfo = ref([])
+    const jobInfo = ref([])
+    onMounted(async () => {
+      await getChess()
+      await getRace(chess.value[0].raceIds)
+      await getJob(chess.value[0].jobIds)
     })
 
     const getChess = async () => {
@@ -90,10 +104,30 @@ export default {
       chess.value = res.chessinfo
     }
 
+    const getRace = async ids => {
+      const { data: res } = await api.getRaceById(ids)
+      console.log(res)
+      raceInfo.value = res.raceinfo
+      console.log(getRaceImg())
+    }
+
+    const getJob = async ids => {
+      const { data: res } = await api.getJobById(ids)
+      console.log(res)
+      jobInfo.value = res.jobinfo
+    }
+
     const computeRace = computed(() => {
       // 将羁绊信息和职业信息展开
       return [...chess.value[0].races.split(','), ...chess.value[0].jobs.split(',')]
     })
+
+    // 构造与羁绊信息和职业信息对应的img列表
+    const getRaceImg = () => {
+      const raceimgs = raceInfo.value.map(item => item.imagePath)
+      const jobimgs = jobInfo.value.map(item => item.imagePath)
+      return [...raceimgs, ...jobimgs]
+    }
 
     const computeValueList = computed(() => {
       let result = []
@@ -129,11 +163,27 @@ export default {
       return result
     })
 
+    const computeLevel = level => {
+      let result = [...level.split('&&')]
+      result = result.map(item => {
+        const num = item.substring(0, 1)
+        const info = item.substring(2)
+        return { num, info }
+      })
+      return result
+    }
+
     return {
       getChess,
+      getRace,
+      getJob,
       chess,
+      raceInfo,
+      jobInfo,
       computeRace,
-      computeValueList
+      getRaceImg,
+      computeValueList,
+      computeLevel
     }
   }
 }
@@ -180,20 +230,28 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        padding-left: 1.25rem;
+        padding-left: 1rem;
         .title {
           font-size: 1.25rem;
           font-weight: 600;
           color: white;
         }
-        .race {
+        .top-race {
           display: flex;
+          justify-content: space-between;
           .raceinfo {
             font-size: 1rem;
-            background: rgba(19, 18, 18, 0.8);
+            background: rgba(15, 15, 15, 0.8);
             color: white;
-            padding: 0.1rem 0.3125rem;
-            margin-right: 0.5rem;
+            padding: 0.1rem 0.1rem;
+            margin-right: 0.3rem;
+            display: flex;
+            align-items: center;
+            img {
+              width: 1.25rem;
+              height: 1.25rem;
+              filter: invert(100%);
+            }
           }
         }
       }
@@ -259,7 +317,8 @@ export default {
       text-align: justify; //两端对齐
     }
   }
-  .race {
+  .race,
+  .job {
     padding: 0.625rem 1.25rem;
     .title {
       font-size: 1.25rem;
@@ -274,15 +333,18 @@ export default {
     .level {
       display: flex;
       .num {
-        padding: 0.125rem;
-        width: 2rem;
-        height: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.2rem;
+        min-width: 1.8rem;
+        height: 1.5rem;
         text-align: center;
         background: black;
         color: white;
+        margin-right: 0.3125rem;
       }
       .detail {
-        margin-left: 0.3125rem;
         margin-bottom: 1rem;
         white-space: pre-wrap;
         text-align: justify; //两端对齐

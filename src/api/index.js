@@ -32,9 +32,27 @@ const getChessById = id => {
   })
 }
 
+// 根据raceid获取英雄详情
+const getRaceById = id => {
+  return http({
+    method: 'GET',
+    url: `/getraceinfo?raceId=${id}`
+  })
+}
+
+// 根据jobid获取英雄详情
+const getJobById = id => {
+  return http({
+    method: 'GET',
+    url: `/getjobinfo?jobId=${id}`
+  })
+}
+
 export default {
   getNews,
   getDetailById,
   getTeams,
-  getChessById
+  getChessById,
+  getRaceById,
+  getJobById
 }
