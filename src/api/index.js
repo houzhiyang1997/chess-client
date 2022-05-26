@@ -56,6 +56,14 @@ const getEquipById = id => {
   })
 }
 
+// 获取协同英雄信息
+const getSimilar = (jobs, races) => {
+  return http({
+    method: 'GET',
+    url: `/getsimilar?jobs=${jobs}&races=${races}`
+  })
+}
+
 export default {
   getNews,
   getDetailById,
@@ -63,5 +71,6 @@ export default {
   getChessById,
   getRaceById,
   getJobById,
-  getEquipById
+  getEquipById,
+  getSimilar
 }

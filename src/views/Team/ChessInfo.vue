@@ -93,8 +93,13 @@
         </div>
       </div>
     </div>
-    <div>
-      这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息
+    <div class="similar">
+      <div class="similar-imglist">
+        <div class="img-item" v-for="(item, index) in similarInfo" :key="index" @click="handleClickImg(item.chessId)">
+          <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + item.TFTID + '.png'" />
+          <div class="img-name">{{ item.displayName }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +108,7 @@
 import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'chessInfo',
   props: ['id'],
@@ -110,41 +116,51 @@ export default {
     detailHeader
   },
   setup(props) {
+    const router = useRouter()
+    // 当前英雄信息
     const chess = ref([])
+    // 羁绊信息 可能有多个所以是列表
     const raceInfo = ref([])
+    // 职业信息
     const jobInfo = ref([])
+    // 协同英雄信息
+    const similarInfo = ref([])
     // 装备相关
     // TODO: 此处或许可以使用vuex来管理装备信息，然后使用子路由视图routerview来实现
+    // 装备信息
     const equipInfo = ref([])
+    // 装备散件信息
     const formulaInfo = ref([])
+    // 散件是否展示
     const equipShow = ref(false)
+    // 选中装备index
     const equipIndex = ref(0)
     onMounted(async () => {
       await getChess()
       await getRace(chess.value[0].raceIds)
       await getJob(chess.value[0].jobIds)
       await getEquip(chess.value[0].recEquip)
+      await getSimilar(chess.value[0].jobs, chess.value[0].races)
     })
-
+    // 获取当前棋子信息
     const getChess = async () => {
       const { data: res } = await api.getChessById(props.id)
       console.log(res)
       chess.value = res.chessinfo
     }
-
+    // 获取羁绊信息
     const getRace = async ids => {
       const { data: res } = await api.getRaceById(ids)
       console.log(res)
       raceInfo.value = res.raceinfo
-      console.log(getRaceImg())
     }
-
+    // 获取职业信息
     const getJob = async ids => {
       const { data: res } = await api.getJobById(ids)
       console.log(res)
       jobInfo.value = res.jobinfo
     }
-
+    // 获取装备信息
     const getEquip = async ids => {
       const { data: res } = await api.getEquipById(ids)
       console.log(res)
@@ -156,8 +172,22 @@ export default {
       console.log(res)
       formulaInfo.value = res.equipinfo
     }
+    // 获取协同英雄信息
+    const getSimilar = async (jobs, races) => {
+      const { data: res } = await api.getSimilar(jobs, races)
+      console.log(res)
+      similarInfo.value = res.similarinfo
+    }
+
+    const handleClickImg = chessId => {
+      // 跳转到棋子详情页
+      // router.push('/')
+      router.push(`/chessinfo/${chessId}`)
+      router.go(0)
+    }
+
+    // 将羁绊信息和职业信息展开 用于顶部label
     const computeRace = computed(() => {
-      // 将羁绊信息和职业信息展开
       return [...chess.value[0].races.split(','), ...chess.value[0].jobs.split(',')]
     })
 
@@ -204,6 +234,7 @@ export default {
       return result
     })
 
+    // 构造羁绊和职业的分级数据
     const computeLevel = level => {
       let result = [...level.split('&&')]
       result = result.map(item => {
@@ -217,6 +248,7 @@ export default {
     const handleClickEquip = async index => {
       // 获取散件装备信息
       await getEquipFormula(equipInfo.value[index].formula)
+      // 控制选中状态和选中index
       equipShow.value = true
       equipIndex.value = index
     }
@@ -227,10 +259,13 @@ export default {
       getJob,
       getEquip,
       getEquipFormula,
+      getSimilar,
+      handleClickImg,
       chess,
       raceInfo,
       jobInfo,
       equipInfo,
+      similarInfo,
       formulaInfo,
       equipShow,
       equipIndex,
@@ -429,6 +464,31 @@ export default {
         img {
           width: 3rem;
           margin-right: 0.625rem;
+        }
+      }
+    }
+  }
+  .similar {
+    padding: 0.625rem 1.25rem;
+    width: 100%;
+    .similar-imglist {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      .img-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 0.675rem;
+        margin-bottom: 0.625rem;
+        img {
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 1.75rem;
+        }
+        .img-name {
+          padding-top: 0.3125rem;
+          font-size: 0.875rem;
         }
       }
     }

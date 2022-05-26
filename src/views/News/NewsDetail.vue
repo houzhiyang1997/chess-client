@@ -53,7 +53,9 @@ export default {
     // 控制footer隐藏与否
     hiddenFooter()
     const router = useRouter()
+    // 新闻详情 数组存储 只有一个对象
     const detail = ref([])
+    // 与底部输入框双向绑定的评论内容
     const comment = ref('')
 
     onMounted(() => {

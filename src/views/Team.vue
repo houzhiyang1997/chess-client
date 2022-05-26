@@ -30,6 +30,7 @@ export default {
     const loading = ref(false)
     const finished = ref(false)
 
+    // 获取全部阵容列表 对应team表，for渲染每一项
     const getTeam = async () => {
       const { data: res } = await api.getTeams()
       console.log(res)
