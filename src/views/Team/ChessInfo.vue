@@ -182,8 +182,7 @@ export default {
     const handleClickImg = chessId => {
       // 跳转到棋子详情页
       // router.push('/')
-      router.push(`/chessinfo/${chessId}`)
-      router.go(0)
+      router.replace(`/chessinforefresh/${chessId}`)
     }
 
     // 将羁绊信息和职业信息展开 用于顶部label
@@ -328,7 +327,7 @@ export default {
         }
         .top-race {
           display: flex;
-          justify-content: space-between;
+          // justify-content: space-between;
           .raceinfo {
             font-size: 1rem;
             background: rgba(15, 15, 15, 0.8);

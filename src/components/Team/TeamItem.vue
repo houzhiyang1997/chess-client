@@ -35,7 +35,7 @@ export default {
     const chessList = props.info.chessList.split(',')
     const handleClickImg = index => {
       // 跳转到棋子详情页，index是当前图片的index，因为与chessList一一对应，所以可以拿到对应的id
-      router.push(`/chessinfo/${chessList[index]}`)
+      router.push(`/chessinforefresh/${chessList[index]}`)
     }
 
     return { hardValue, handleClickImg }
