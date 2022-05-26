@@ -129,6 +129,7 @@ export default {
       return [...raceimgs, ...jobimgs]
     }
 
+    // 生成表格数据
     const computeValueList = computed(() => {
       let result = []
       // result.push({ name: '', lev1: '', lev2: '', lev3: '' })
@@ -144,6 +145,7 @@ export default {
         { name: '法力值', value: chess.value[0].magic, flag: false }
       ]
       result = temp.map(item => {
+        // 根据flag判断属性是否具有成长性
         if (item.flag) {
           return {
             name: item.name,
