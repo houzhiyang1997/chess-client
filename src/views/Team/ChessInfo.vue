@@ -74,7 +74,28 @@
         <div class="detail">{{ lev.info }}</div>
       </div>
     </div>
-    <div class="equip"></div>
+    <div class="equip">
+      <div class="eq-title">推荐装备</div>
+      <div class="eq-imglist">
+        <img :src="item.imagePath" v-for="(item, index) in equipInfo" :key="index" @click="handleClickEquip(index)" />
+      </div>
+      <div class="eq-info" v-if="equipShow">
+        <div class="eq-info-title">装备效果:</div>
+        <div class="eq-effect">{{ equipInfo[equipIndex].effect }}</div>
+        <div class="eq-info-title">合成路径:</div>
+        <div class="eq-info-imglist" v-if="equipInfo">
+          <!-- 只请求到一条信息代表由同一件装备合成 -->
+          <div v-if="formulaInfo.length === 1">
+            <img :src="formulaInfo[0].imagePath" />
+            <img :src="formulaInfo[0].imagePath" />
+          </div>
+          <img v-else :src="item.imagePath" v-for="(item, index) in formulaInfo" :key="index" />
+        </div>
+      </div>
+    </div>
+    <div>
+      这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息这是占位信息
+    </div>
   </div>
 </template>
 
@@ -92,10 +113,17 @@ export default {
     const chess = ref([])
     const raceInfo = ref([])
     const jobInfo = ref([])
+    // 装备相关
+    // TODO: 此处或许可以使用vuex来管理装备信息，然后使用子路由视图routerview来实现
+    const equipInfo = ref([])
+    const formulaInfo = ref([])
+    const equipShow = ref(false)
+    const equipIndex = ref(0)
     onMounted(async () => {
       await getChess()
       await getRace(chess.value[0].raceIds)
       await getJob(chess.value[0].jobIds)
+      await getEquip(chess.value[0].recEquip)
     })
 
     const getChess = async () => {
@@ -117,6 +145,17 @@ export default {
       jobInfo.value = res.jobinfo
     }
 
+    const getEquip = async ids => {
+      const { data: res } = await api.getEquipById(ids)
+      console.log(res)
+      equipInfo.value = res.equipinfo
+    }
+    // 请求散件装备信息
+    const getEquipFormula = async ids => {
+      const { data: res } = await api.getEquipById(ids)
+      console.log(res)
+      formulaInfo.value = res.equipinfo
+    }
     const computeRace = computed(() => {
       // 将羁绊信息和职业信息展开
       return [...chess.value[0].races.split(','), ...chess.value[0].jobs.split(',')]
@@ -175,17 +214,31 @@ export default {
       return result
     }
 
+    const handleClickEquip = async index => {
+      // 获取散件装备信息
+      await getEquipFormula(equipInfo.value[index].formula)
+      equipShow.value = true
+      equipIndex.value = index
+    }
+
     return {
       getChess,
       getRace,
       getJob,
+      getEquip,
+      getEquipFormula,
       chess,
       raceInfo,
       jobInfo,
+      equipInfo,
+      formulaInfo,
+      equipShow,
+      equipIndex,
       computeRace,
       getRaceImg,
       computeValueList,
-      computeLevel
+      computeLevel,
+      handleClickEquip
     }
   }
 }
@@ -350,6 +403,33 @@ export default {
         margin-bottom: 1rem;
         white-space: pre-wrap;
         text-align: justify; //两端对齐
+      }
+    }
+  }
+  .equip {
+    padding: 0 1.25rem;
+    .eq-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .eq-imglist {
+      display: flex;
+      padding: 0.625rem 0;
+      img {
+        width: 3rem;
+        margin-right: 0.625rem;
+      }
+    }
+    .eq-info {
+      .eq-info-title {
+        font-weight: 600;
+        padding: 0.3125rem 0;
+      }
+      .eq-info-imglist {
+        img {
+          width: 3rem;
+          margin-right: 0.625rem;
+        }
       }
     }
   }

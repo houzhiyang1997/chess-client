@@ -48,11 +48,20 @@ const getJobById = id => {
   })
 }
 
+// 根据equipid获取英雄详情
+const getEquipById = id => {
+  return http({
+    method: 'GET',
+    url: `/getequipinfo?equipId=${id}`
+  })
+}
+
 export default {
   getNews,
   getDetailById,
   getTeams,
   getChessById,
   getRaceById,
-  getJobById
+  getJobById,
+  getEquipById
 }
