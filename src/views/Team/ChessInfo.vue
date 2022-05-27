@@ -141,7 +141,7 @@ export default {
       getRace(chess.value[0].raceIds)
       getJob(chess.value[0].jobIds)
       getEquip(chess.value[0].recEquip)
-      getSimilar(chess.value[0].jobs, chess.value[0].races)
+      getSimilar(chess.value[0].jobs, chess.value[0].races, chess.value[0].chessId)
     })
     // 获取当前棋子信息
     const getChess = async () => {
@@ -174,8 +174,8 @@ export default {
       formulaInfo.value = res.equipinfo
     }
     // 获取协同英雄信息
-    const getSimilar = async (jobs, races) => {
-      const { data: res } = await api.getSimilar(jobs, races)
+    const getSimilar = async (jobs, races, id) => {
+      const { data: res } = await api.getSimilar(jobs, races, id)
       console.log(res)
       similarInfo.value = res.similarinfo
     }

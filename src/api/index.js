@@ -56,11 +56,11 @@ const getEquipById = id => {
   })
 }
 
-// 获取协同英雄信息
-const getSimilar = (jobs, races) => {
+// 获取协同英雄信息 传递id是为了过筛当前英雄不会重复添加
+const getSimilar = (jobs, races, id) => {
   return http({
     method: 'GET',
-    url: `/getsimilar?jobs=${jobs}&races=${races}`
+    url: `/getsimilar?jobs=${jobs}&races=${races}&id=${id}`
   })
 }
 
