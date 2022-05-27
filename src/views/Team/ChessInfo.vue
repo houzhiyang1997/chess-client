@@ -94,6 +94,7 @@
       </div>
     </div>
     <div class="similar">
+      <div class="title">协同英雄</div>
       <div class="similar-imglist">
         <div class="img-item" v-for="(item, index) in similarInfo" :key="index" @click="handleClickImg(item.chessId)">
           <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + item.TFTID + '.png'" />
@@ -470,6 +471,11 @@ export default {
   .similar {
     padding: 0.625rem 1.25rem;
     width: 100%;
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
     .similar-imglist {
       width: 100%;
       display: flex;
