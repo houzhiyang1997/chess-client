@@ -1,6 +1,9 @@
 <template>
   <div class="teamitem-container">
-    <div class="title">{{ info.title }}</div>
+    <div class="title" @click="handleClickTitle(info.teamId)">
+      <div class="title-main">{{ info.title }}</div>
+      <div class="title-arrow">详情<i class="iconfont icon-youjiantou1"></i></div>
+    </div>
     <div class="main">
       <!-- imgList中元素格式为类似 400.png -->
       <img
@@ -33,12 +36,17 @@ export default {
     const hardValue = ref(props.info.hard)
     // 对应team表 chessList 也就是棋子们对应的id
     const chessList = props.info.chessList.split(',')
+
     const handleClickImg = index => {
       // 跳转到棋子详情页，index是当前图片的index，因为与chessList一一对应，所以可以拿到对应的id
       router.push(`/chessinforefresh/${chessList[index]}`)
     }
 
-    return { hardValue, handleClickImg }
+    const handleClickTitle = teamId => {
+      router.push(`/teamdetail/${teamId}`)
+    }
+
+    return { hardValue, handleClickImg, handleClickTitle }
   }
 }
 </script>
@@ -50,6 +58,15 @@ export default {
   padding: 0.3125rem 0;
   .title {
     font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title-arrow {
+      font-size: 0.75rem;
+      i {
+        font-size: 0.75rem;
+      }
+    }
   }
   .main {
     display: flex;

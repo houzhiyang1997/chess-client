@@ -108,6 +108,7 @@
 <script>
 import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
+import { hiddenFooter } from '@/hooks/useHidden.js'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
@@ -117,6 +118,8 @@ export default {
     detailHeader
   },
   setup(props) {
+    // 隐藏footer
+    hiddenFooter()
     const router = useRouter()
     // 当前英雄信息
     const chess = ref([])
