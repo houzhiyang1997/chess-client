@@ -137,10 +137,10 @@ export default {
     const equipIndex = ref(0)
     onMounted(async () => {
       await getChess()
-      await getRace(chess.value[0].raceIds)
-      await getJob(chess.value[0].jobIds)
-      await getEquip(chess.value[0].recEquip)
-      await getSimilar(chess.value[0].jobs, chess.value[0].races)
+      getRace(chess.value[0].raceIds)
+      getJob(chess.value[0].jobIds)
+      getEquip(chess.value[0].recEquip)
+      getSimilar(chess.value[0].jobs, chess.value[0].races)
     })
     // 获取当前棋子信息
     const getChess = async () => {
