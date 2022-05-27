@@ -24,6 +24,13 @@ const getTeams = () => {
   })
 }
 
+// 获取阵容信息
+const getTeamById = teamId => {
+  return http({
+    method: 'GET',
+    url: `getteambyid?teamId=${teamId}`
+  })
+}
 // 根据chessid获取英雄详情
 const getChessById = id => {
   return http({
@@ -68,6 +75,7 @@ export default {
   getNews,
   getDetailById,
   getTeams,
+  getTeamById,
   getChessById,
   getRaceById,
   getJobById,

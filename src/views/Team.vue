@@ -8,7 +8,7 @@
       </div>
       <div class="main">
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <team-item v-for="item in teamList" :key="item" :info="item"></team-item>
+          <team-item v-for="item in teamList" :key="item" :info="item" :top="true" :foot="true"></team-item>
         </van-list>
       </div>
     </div>

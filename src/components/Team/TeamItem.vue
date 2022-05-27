@@ -2,7 +2,8 @@
   <div class="teamitem-container">
     <div class="title" @click="handleClickTitle(info.teamId)">
       <div class="title-main">{{ info.title }}</div>
-      <div class="title-arrow">详情<i class="iconfont icon-youjiantou1"></i></div>
+      <div class="title-arrow" v-if="top">详情<i class="iconfont icon-youjiantou1"></i></div>
+      <div class="title-label" v-else>新手推荐</div>
     </div>
     <div class="main">
       <!-- imgList中元素格式为类似 400.png -->
@@ -13,7 +14,7 @@
         @click="handleClickImg(index)"
       />
     </div>
-    <div class="info">
+    <div class="info" v-if="foot">
       <div class="good">点赞数:{{ info.goods }}</div>
       <div class="hard">
         <div>成型难度</div>
@@ -29,7 +30,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
   name: 'teamItem',
-  props: ['info'],
+  props: ['info', 'top', 'foot'],
   setup(props) {
     const router = useRouter()
     // 成型难度
@@ -66,6 +67,12 @@ export default {
       i {
         font-size: 0.75rem;
       }
+    }
+    .title-label {
+      background: #c6aa4f;
+      padding: 0.125rem 0.375rem;
+      font-size: 0.75rem;
+      color: rgb(15, 14, 14);
     }
   }
   .main {
