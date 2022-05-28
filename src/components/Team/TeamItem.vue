@@ -62,26 +62,38 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .title-main {
+      flex: 5;
+      -webkit-line-clamp: 1; //（用来限制在一个块元素显示的文本的行数，2 表示最多显示 2 行。为了实现该效果，它需要组合其他的 WebKit 属性）
+      display: -webkit-box; //（和 1 结合使用，将对象作为弹性伸缩盒子模型显示 ）
+      -webkit-box-orient: vertical; //（和 1 结合使用 ，设置或检索伸缩盒对象的子元素的排列方式 ）
+      overflow: hidden; //（文本溢出限定的宽度就隐藏内容）
+      text-overflow: ellipsis; //（多行文本的情况下，用省略号 “…” 隐藏溢出范围的文本
+    }
     .title-arrow {
+      flex: 1;
       font-size: 0.75rem;
       i {
         font-size: 0.75rem;
       }
     }
     .title-label {
+      flex: 1;
       background: #c6aa4f;
       padding: 0.125rem 0.375rem;
       font-size: 0.75rem;
+      text-align: center;
       color: rgb(15, 14, 14);
     }
   }
   .main {
     display: flex;
+    flex-wrap: wrap;
     overflow: hidden;
-    padding: 0.625rem 0;
+    padding: 0.625rem 0 0 0;
     img {
       width: 2.5rem;
-      padding-right: 0.3125rem;
+      padding: 0.3125rem 0.1875rem;
     }
   }
   .info {
