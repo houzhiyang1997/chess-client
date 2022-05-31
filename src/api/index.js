@@ -71,6 +71,14 @@ const getSimilar = (jobs, races, id) => {
   })
 }
 
+// 根据equipid获取英雄详情
+const getHexById = id => {
+  return http({
+    method: 'GET',
+    url: `/gethexinfo?hexId=${id}`
+  })
+}
+
 export default {
   getNews,
   getDetailById,
@@ -80,5 +88,6 @@ export default {
   getRaceById,
   getJobById,
   getEquipById,
-  getSimilar
+  getSimilar,
+  getHexById
 }

@@ -30,17 +30,9 @@
         <div class="title">海克斯科技</div>
         <div id="first-choose" class="choose">
           <div class="left">
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
-            </div>
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
-            </div>
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
+            <div class="hex-item" v-for="hexinfo in hexInfoList.slice(0, 3)" :key="hexinfo.id">
+              <img :src="hexinfo.imgUrl" />
+              <p>{{ hexinfo.name }}</p>
             </div>
           </div>
           <div class="right">
@@ -50,17 +42,9 @@
         </div>
         <div id="second-choose" class="choose">
           <div class="left">
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
-            </div>
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
-            </div>
-            <div class="hex-item">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
-              <p>变异战士之冕</p>
+            <div class="hex-item" v-for="hexinfo in hexInfoList.slice(3)" :key="hexinfo.id">
+              <img :src="hexinfo.imgUrl" />
+              <p>{{ hexinfo.name }}</p>
             </div>
           </div>
           <div class="right">
@@ -69,12 +53,16 @@
           </div>
         </div>
       </div>
+      <div class="main-chessboard" v-if="teamInfo[0]">
+        <chess-board :needInfo="[teamInfo[0].chessList, teamInfo[0].imgList, teamInfo[0].chessPosition]"></chess-board>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import teamItem from '@/components/Team/TeamItem.vue'
+import chessBoard from '@/components/Team/Chessboard.vue'
 import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
 import { hiddenFooter } from '@/hooks/useHidden'
@@ -84,7 +72,8 @@ export default {
   props: ['teamId'],
   components: {
     detailHeader,
-    teamItem
+    teamItem,
+    chessBoard
   },
   setup(props) {
     // 隐藏底部
@@ -131,6 +120,14 @@ export default {
       iconList.value = countRJ(chessInfoList.value)
       console.log(iconList.value)
     }
+
+    // 根据teaminfo中的hexid列表，获取hex信息
+    const hexInfoList = ref([])
+    const getHexList = async ids => {
+      const { data: res } = await api.getHexById(ids)
+      console.log(res)
+      hexInfoList.value = res.hexinfo
+    }
     // 羁绊和职业的计数数组
     const iconList = ref([])
     // 对羁绊和职业进行计数
@@ -172,10 +169,23 @@ export default {
     onMounted(async () => {
       await getTeam(props.teamId)
       getChessList(teamInfo.value[0].chessList)
+      getHexList(teamInfo.value[0].hexList)
       handleScroll()
     })
 
-    return { scrollTop, topBg, handleScroll, teamInfo, getTeam, getChessList, countChess, countRJ, iconList }
+    return {
+      scrollTop,
+      topBg,
+      handleScroll,
+      teamInfo,
+      getTeam,
+      getChessList,
+      countChess,
+      countRJ,
+      iconList,
+      hexInfoList,
+      getHexList
+    }
   }
 }
 </script>
@@ -285,7 +295,9 @@ export default {
         .left {
           display: flex;
           justify-content: space-between;
+          flex: 3;
           .hex-item {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -307,6 +319,7 @@ export default {
           flex: 1;
           display: flex;
           align-items: center;
+          color: white;
           .three {
             width: 0;
             height: 0;
@@ -335,6 +348,9 @@ export default {
           }
         }
       }
+    }
+    .main-chessboard {
+      padding: 0 1.25rem;
     }
   }
 }
