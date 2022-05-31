@@ -18,9 +18,12 @@
         <div class="icon-table">
           <div class="icon-item" v-for="(icon, index) in iconList" :key="index">{{ icon.num + '  ' + icon.name }}</div>
         </div>
-        <div class="icon-race-detail">羁绊详情<i class="iconfont icon-xiangxia"></i></div>
-        <div class="hr-line" style="height: 0.125rem" />
+        <div class="icon-race-detail" @click="isHideRaceDetail = !isHideRaceDetail">
+          羁绊详情<i class="iconfont icon-xiangxia"></i>
+        </div>
       </div>
+      <hidden-box v-if="isHideRaceDetail"></hidden-box>
+      <div class="hr-line" style="height: 0.125rem" />
       <div class="main-steady" v-if="teamInfo[0]">
         <div class="title">稳健运营</div>
         <div class="st-content">{{ teamInfo[0].steadyContent }}</div>
@@ -64,6 +67,7 @@
 import teamItem from '@/components/Team/TeamItem.vue'
 import chessBoard from '@/components/Team/Chessboard.vue'
 import detailHeader from '@/components/DetailHeader.vue'
+import hiddenBox from '@/components/Team/HiddenBox.vue'
 import api from '@/api/index'
 import { hiddenFooter } from '@/hooks/useHidden'
 import { ref, onMounted, watchEffect, nextTick, computed } from 'vue'
@@ -72,12 +76,16 @@ export default {
   props: ['teamId'],
   components: {
     detailHeader,
+    hiddenBox,
     teamItem,
     chessBoard
   },
   setup(props) {
     // 隐藏底部
     hiddenFooter()
+
+    // 隐藏盒子控制
+    const isHideRaceDetail = ref(false)
     // #region 检测头部滚动实现高斯模糊
     const scrollTop = ref(0)
     const topBg = ref()
@@ -194,7 +202,8 @@ export default {
       iconList,
       hexInfoList,
       getHexList,
-      formatNeedInfo
+      formatNeedInfo,
+      isHideRaceDetail
     }
   }
 }

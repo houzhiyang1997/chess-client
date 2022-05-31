@@ -1,19 +1,20 @@
 <template>
   <div class="board-container">
+    <div class="title">阵容站位</div>
     <div class="bg">
       <img class="location" src="http://106.12.140.161:81/image/location.png" />
       <!-- <img
         class="item"
-        :style="{ top: 2.3125 * 1 + 'rem', left: 1.375 + 2.875 * 2 + 'rem' }"
+        :style="getPosition('1-3')"
         src="https://game.gtimg.cn/images/lol/act/img/tft/champions/414.png"
       /> -->
-      <img
-        class="item"
-        :style="getPosition('1-3')"
-        src="https://game.gtimg.cn/images/lol/act/img/tft/champions/434.png"
-      />
+      <div class="item" v-for="(item, index) in needInfo.chessPosition.split(',')" :key="index">
+        <img
+          :style="getPosition(item)"
+          :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + needInfo.imgList.split(',')[index]"
+        />
+      </div>
     </div>
-    <div>{{ needInfo }}</div>
   </div>
 </template>
 
@@ -43,19 +44,28 @@ export default {
 
 <style lang="less" scoped>
 .board-container {
+  .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.625rem;
+  }
   .bg {
     position: relative;
     .location {
       width: 100%;
     }
     .item {
-      position: absolute;
-      width: 2.85rem;
-      // height: 5.1875rem;
-      object-fit: cover;
-      mask: url('https://game.gtimg.cn/images/lol/tft/content-site/slot-mask-img.png') no-repeat;
-      // mask-size: 2.625rem 2.8rem;
-      mask-size: 2.7rem 2.85rem;
+      img {
+        position: absolute;
+        width: 2.85rem;
+        top: 0;
+        left: 0;
+        object-fit: cover;
+        mask: url('https://game.gtimg.cn/images/lol/tft/content-site/slot-mask-img.png') no-repeat;
+        // mask-size: 2.625rem 2.8rem;
+        mask-size: 2.7rem 2.85rem;
+        mask-border: 5px solid orange;
+      }
     }
   }
 }
