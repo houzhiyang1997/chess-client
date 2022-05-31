@@ -18,14 +18,19 @@
         <div class="icon-table">
           <div class="icon-item" v-for="(icon, index) in iconList" :key="index">{{ icon.num + '  ' + icon.name }}</div>
         </div>
-        <div class="icon-race-detail" @click="myUtil.openAndClose(hiddenbox.content)">
-          羁绊详情<i class="iconfont icon-xiangxia"></i>
+        <div class="icon-detail" @click="myUtil.openAndClose(racedetail.content)">
+          羁绊详情
+          <i class="iconfont icon-xiangxia"></i>
         </div>
       </div>
-      <div>
-        <hidden-box ref="hiddenbox"></hidden-box>
-      </div>
-
+      <!-- 可展开的羁绊详情 -->
+      <race-detail
+        v-if="raceIdList.length && jobIdList.length"
+        ref="racedetail"
+        :raceIdList="raceIdList"
+        :jobIdList="jobIdList"
+      ></race-detail>
+      <!-- 稳健运营 -->
       <div class="main-steady" v-if="teamInfo[0]">
         <div class="hr-line" style="height: 0.125rem" />
         <div class="title">稳健运营</div>
@@ -61,6 +66,10 @@
       </div>
       <div class="main-chessboard" v-if="teamInfo[0]">
         <chess-board :needInfo="formatNeedInfo"></chess-board>
+        <div class="icon-detail" @click="myUtil.openAndClose(hiddenbox.content)">
+          站位详情<i class="iconfont icon-xiangxia"></i>
+        </div>
+        <hidden-box ref="hiddenbox"></hidden-box>
       </div>
     </div>
   </div>
@@ -70,6 +79,7 @@
 import teamItem from '@/components/Team/TeamItem.vue'
 import chessBoard from '@/components/Team/Chessboard.vue'
 import detailHeader from '@/components/DetailHeader.vue'
+import raceDetail from '@/components/Team/RaceDetail.vue'
 import hiddenBox from '@/components/Team/HiddenBox.vue'
 import api from '@/api/index'
 import myUtil from '@/util/utils'
@@ -82,14 +92,15 @@ export default {
     detailHeader,
     hiddenBox,
     teamItem,
-    chessBoard
+    chessBoard,
+    raceDetail
   },
   setup(props) {
     // 隐藏底部
     hiddenFooter()
-
     // 隐藏盒子控制
     const hiddenbox = ref()
+    const racedetail = ref()
     // #region 检测头部滚动实现高斯模糊
     const scrollTop = ref(0)
     const topBg = ref()
@@ -131,6 +142,9 @@ export default {
       // 获取到信息后 处理iconlist
       iconList.value = countRJ(chessInfoList.value)
       console.log(iconList.value)
+      // 生成ids列表用于传入子组件
+      raceIdList.value = getRaceAndJobIds(chessInfoList.value, 'race')
+      jobIdList.value = getRaceAndJobIds(chessInfoList.value, 'job')
     }
 
     // 生成需要的格式化的数据传入chessboard组件
@@ -186,7 +200,32 @@ export default {
       }
       return result
     }
+    // 获取阵容的羁绊和职业的id列表，以便传入raceDetail子组件用于请求详情
+    const raceIdList = ref([])
+    const jobIdList = ref([])
+    const getRaceAndJobIds = (origin, category) => {
+      if (category === 'race') {
+        let readyRace = []
+        origin.forEach(item => {
+          readyRace.push(...item.raceIds.split(','))
+        })
+        readyRace = readyRace.sort((a, b) => {
+          return b - a
+        })
+        return [...new Set(readyRace)]
+      } else {
+        let readyJob = []
 
+        origin.forEach(item => {
+          readyJob.push(...item.jobIds.split(','))
+        })
+
+        readyJob = readyJob.sort((a, b) => {
+          return b - a
+        })
+        return [...new Set(readyJob)]
+      }
+    }
     onMounted(async () => {
       await getTeam(props.teamId)
       getChessList(teamInfo.value[0].chessList)
@@ -196,6 +235,7 @@ export default {
 
     return {
       hiddenbox,
+      racedetail,
       myUtil,
       scrollTop,
       topBg,
@@ -205,6 +245,9 @@ export default {
       getChessList,
       countChess,
       countRJ,
+      getRaceAndJobIds,
+      raceIdList,
+      jobIdList,
       iconList,
       hexInfoList,
       getHexList,
@@ -268,6 +311,14 @@ export default {
     height: 100%;
     margin-top: 12.5rem;
     background: white;
+    .icon-detail {
+      font-size: 0.75rem;
+      color: grey;
+      text-align: center;
+      i {
+        font-size: 0.75rem;
+      }
+    }
     .title {
       font-size: 1.25rem;
       font-weight: 600;
@@ -286,14 +337,6 @@ export default {
           font-size: 0.75rem;
           padding: 0.125rem 0.3125rem;
           margin: 0 0.1875rem 0.3125rem 0.1875rem;
-        }
-      }
-      .icon-race-detail {
-        font-size: 0.75rem;
-        color: grey;
-        text-align: center;
-        i {
-          font-size: 0.75rem;
         }
       }
     }

@@ -8,7 +8,7 @@ const openAndClose = element => {
     element.style.transition = 'none'
     element.style.height = 'auto'
     const targetHeight = window.getComputedStyle(element).height
-    element.style.transition = 'height 600ms'
+    element.style.transition = 'height 1000ms'
     element.style.height = '0px'
     console.log(element.offsetWidth) // 触发浏览器重排
     element.style.height = targetHeight

@@ -64,7 +64,6 @@ export default {
         mask: url('https://game.gtimg.cn/images/lol/tft/content-site/slot-mask-img.png') no-repeat;
         // mask-size: 2.625rem 2.8rem;
         mask-size: 2.7rem 2.85rem;
-        mask-border: 5px solid orange;
       }
     }
   }
