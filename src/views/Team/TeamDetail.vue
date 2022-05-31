@@ -4,8 +4,8 @@
     <div class="bg">
       <img src="http://106.12.140.161:81/image/bg2.jpg" ref="topBg" />
     </div>
-    <div class="author">
-      <img src="https://game.gtimg.cn/images/lol/act/img/tft/author/yese.png" />
+    <div class="author" v-if="teamInfo[0]">
+      <img :src="teamInfo[0].authorImg" />
     </div>
     <div class="author-name" v-if="teamInfo[0]">
       <p>{{ teamInfo[0].author }}</p>
@@ -15,7 +15,59 @@
         <team-item :info="teamInfo[0]" :top="false" :foot="false"></team-item>
       </div>
       <div class="main-iconlist">
-        <div class="icon-item" v-for="(icon, index) in iconList" :key="index">{{ icon.num + '  ' + icon.name }}</div>
+        <div class="icon-table">
+          <div class="icon-item" v-for="(icon, index) in iconList" :key="index">{{ icon.num + '  ' + icon.name }}</div>
+        </div>
+        <div class="icon-race-detail">羁绊详情<i class="iconfont icon-xiangxia"></i></div>
+        <div class="hr-line" style="height: 0.125rem" />
+      </div>
+      <div class="main-steady" v-if="teamInfo[0]">
+        <div class="title">稳健运营</div>
+        <div class="st-content">{{ teamInfo[0].steadyContent }}</div>
+        <div class="hr-line" style="height: 0.1875rem" />
+      </div>
+      <div class="main-hex">
+        <div class="title">海克斯科技</div>
+        <div id="first-choose" class="choose">
+          <div class="left">
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+          </div>
+          <div class="right">
+            <div class="three"></div>
+            <div class="choose-label">优选</div>
+          </div>
+        </div>
+        <div id="second-choose" class="choose">
+          <div class="left">
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+            <div class="hex-item">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/hex/20220104145237HEX61d3eeb5ceaac.png" />
+              <p>变异战士之冕</p>
+            </div>
+          </div>
+          <div class="right">
+            <div class="three-second"></div>
+            <div class="choose-label-second">备选</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -25,6 +77,7 @@
 import teamItem from '@/components/Team/TeamItem.vue'
 import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
+import { hiddenFooter } from '@/hooks/useHidden'
 import { ref, onMounted, watchEffect, nextTick } from 'vue'
 export default {
   name: 'teamDetail',
@@ -34,6 +87,8 @@ export default {
     teamItem
   },
   setup(props) {
+    // 隐藏底部
+    hiddenFooter()
     // #region 检测头部滚动实现高斯模糊
     const scrollTop = ref(0)
     const topBg = ref()
@@ -129,6 +184,10 @@ export default {
 .teamdetail-container {
   position: relative;
   // #region 顶部三个绝对定位
+  .hr-line {
+    background: #ebedf0;
+    margin: 0.625rem 0;
+  }
   .bg {
     margin-top: 2.875rem;
     width: 100%;
@@ -175,19 +234,106 @@ export default {
     height: 100%;
     margin-top: 12.5rem;
     background: white;
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
     .main-top {
       padding: 3.5rem 1.25rem 0 1.25rem;
     }
     .main-iconlist {
       padding: 0 1.25rem;
-      display: flex;
-      flex-wrap: wrap;
-      .icon-item {
-        background: black;
-        color: white;
+      .icon-table {
+        display: flex;
+        flex-wrap: wrap;
+        .icon-item {
+          background: black;
+          color: white;
+          font-size: 0.75rem;
+          padding: 0.125rem 0.3125rem;
+          margin: 0 0.1875rem 0.3125rem 0.1875rem;
+        }
+      }
+      .icon-race-detail {
         font-size: 0.75rem;
-        padding: 0.125rem 0.3125rem;
-        margin: 0 0.1875rem 0.3125rem 0.1875rem;
+        color: grey;
+        text-align: center;
+        i {
+          font-size: 0.75rem;
+        }
+      }
+    }
+    .main-steady {
+      padding: 0 1.25rem;
+      .st-content {
+        margin-top: 0.3125rem;
+        margin-bottom: 1rem;
+        white-space: pre-wrap;
+        text-align: justify; //两端对齐
+      }
+    }
+    .main-hex {
+      padding: 0 1.25rem;
+      .choose {
+        margin: 0.625rem 0;
+        padding: 2rem 0;
+        width: 100%;
+        // height: 10rem;
+        background: rgb(250, 247, 247);
+        display: flex;
+        align-items: center;
+        .left {
+          display: flex;
+          justify-content: space-between;
+          .hex-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 0.3125rem;
+            p {
+              margin-top: 0.3125rem;
+              font-size: 0.8rem;
+            }
+            img {
+              width: 3rem;
+              height: 3rem;
+              background: black;
+              border: 2px solid goldenrod;
+              object-fit: cover;
+            }
+          }
+        }
+        .right {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          .three {
+            width: 0;
+            height: 0;
+            border: 1.0938rem solid transparent;
+            border-right-color: rgb(178, 105, 180);
+          }
+          .choose-label {
+            flex: 1;
+            height: 2.1875rem;
+            line-height: 2.1875rem;
+            text-align: center;
+            background: rgb(178, 105, 180);
+          }
+          .three-second {
+            width: 0;
+            height: 0;
+            border: 1.0938rem solid transparent;
+            border-right-color: Silver;
+          }
+          .choose-label-second {
+            flex: 1;
+            height: 2.1875rem;
+            line-height: 2.1875rem;
+            text-align: center;
+            background: Silver;
+          }
+        }
       }
     }
   }

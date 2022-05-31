@@ -70,6 +70,7 @@ export default {
     font-weight: 600;
     font-size: 1rem;
     position: fixed;
+    z-index: 999;
     top: 0;
     left: 0;
     width: 100%;

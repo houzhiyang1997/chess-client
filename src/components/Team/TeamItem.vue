@@ -3,7 +3,9 @@
     <div class="title" @click="handleClickTitle(info.teamId)">
       <div class="title-main">{{ info.title }}</div>
       <div class="title-arrow" v-if="top">详情<i class="iconfont icon-youjiantou1"></i></div>
-      <div class="title-label" v-else>新手推荐</div>
+      <div v-else class="title-label" :style="info.label === '新手推荐' ? 'background:#F8DCBF' : ''">
+        {{ info.label }}
+      </div>
     </div>
     <div class="main">
       <!-- imgList中元素格式为类似 400.png -->
@@ -71,6 +73,7 @@ export default {
       text-overflow: ellipsis; //（多行文本的情况下，用省略号 “…” 隐藏溢出范围的文本
     }
     .title-arrow {
+      text-align: center;
       flex: 1;
       font-size: 0.75rem;
       i {
