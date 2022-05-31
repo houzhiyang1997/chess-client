@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="main-chessboard" v-if="teamInfo[0]">
-        <chess-board :needInfo="[teamInfo[0].chessList, teamInfo[0].imgList, teamInfo[0].chessPosition]"></chess-board>
+        <chess-board :needInfo="formatNeedInfo"></chess-board>
       </div>
     </div>
   </div>
@@ -66,7 +66,7 @@ import chessBoard from '@/components/Team/Chessboard.vue'
 import detailHeader from '@/components/DetailHeader.vue'
 import api from '@/api/index'
 import { hiddenFooter } from '@/hooks/useHidden'
-import { ref, onMounted, watchEffect, nextTick } from 'vue'
+import { ref, onMounted, watchEffect, nextTick, computed } from 'vue'
 export default {
   name: 'teamDetail',
   props: ['teamId'],
@@ -120,6 +120,15 @@ export default {
       iconList.value = countRJ(chessInfoList.value)
       console.log(iconList.value)
     }
+
+    // 生成需要的格式化的数据传入chessboard组件
+    const formatNeedInfo = computed(() => {
+      return {
+        chessList: teamInfo.value[0].chessList,
+        imgList: teamInfo.value[0].imgList,
+        chessPosition: teamInfo.value[0].chessPosition
+      }
+    })
 
     // 根据teaminfo中的hexid列表，获取hex信息
     const hexInfoList = ref([])
@@ -184,7 +193,8 @@ export default {
       countRJ,
       iconList,
       hexInfoList,
-      getHexList
+      getHexList,
+      formatNeedInfo
     }
   }
 }
