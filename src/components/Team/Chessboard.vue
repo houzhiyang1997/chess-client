@@ -10,7 +10,7 @@
       <img
         class="item"
         :style="getPosition('1-3')"
-        src="https://game.gtimg.cn/images/lol/act/img/tft/champions/424.png"
+        src="https://game.gtimg.cn/images/lol/act/img/tft/champions/434.png"
       />
     </div>
     <div>{{ needInfo }}</div>
