@@ -89,15 +89,27 @@
           <!-- 中部文字 -->
           <div class="middle">
             <div class="middle-title">必备</div>
-            <div class="middle-title" v-if="carryChess.secondEquip.length">替代</div>
+            <div class="middle-title" v-if="carryChess.secondEquip">替代</div>
           </div>
           <!-- 右部图片 -->
           <div class="right">
             <div class="first-eq eq-img">
-              <img :src="item.imagePath" v-for="(item, index) in carryChess.firstEquip" :key="index" />
+              <div v-for="(item, index) in carryChess.firstEquip.equipinfo" :key="index">
+                <img :src="item.imagePath" />
+                <div class="formula">
+                  <div
+                    class="formula-item"
+                    v-for="(item, index2) in carryChess.firstEquip.formula[index]"
+                    :key="index2"
+                  >
+                    <img :src="item.imagePath" />
+                    <i class="iconfont icon-youjiantou2" v-if="index2 !== 1"></i>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="second-eq eq-img">
-              <img :src="item.imagePath" alt="" v-for="(item, index) in carryChess.secondEquip" :key="index" />
+              <img :src="item.imagePath" v-for="(item, index) in carryChess.secondEquip.equipinfo" :key="index" />
             </div>
           </div>
         </div>
@@ -187,8 +199,8 @@ export default {
       // 获取到信息后，处理主C信息
       carryChess.info = getCarryChess(chessInfoList.value, teamInfo.value[0].carryChess)
       const { data: res2 } = await api.getEquipById(carryChess.info.recEquip)
-      carryChess.firstEquip = res2.equipinfo.slice(0, 3)
-      carryChess.secondEquip = res2.equipinfo.slice(3)
+      carryChess.firstEquip = { equipinfo: res2.equipinfo.slice(0, 3), formula: res2.formula.slice(0, 3) }
+      carryChess.secondEquip = { equipinfo: res2.equipinfo.slice(3), formula: res2.formula.slice(3) }
     }
 
     // 从请求到的chessInfoList中获取主C信息
@@ -528,9 +540,25 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: space-around;
-          img {
-            margin: 0.3125rem 0.5rem;
-            width: 3rem;
+          .eq-img {
+            display: flex;
+            img {
+              margin: 0.3125rem 0.5rem;
+              width: 3rem;
+            }
+            .formula {
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+              img {
+                margin: 0;
+                width: 1.3rem;
+              }
+              .formula-item {
+                display: flex;
+                align-items: center;
+              }
+            }
           }
         }
       }
