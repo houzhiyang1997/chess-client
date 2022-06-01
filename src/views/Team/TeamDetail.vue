@@ -78,6 +78,35 @@
         </div>
         <div class="hr-line" style="height: 0.1875rem" />
       </div>
+      <!-- 主C装备 -->
+      <div class="carry-chess" v-if="teamInfo[0]">
+        <div class="title">主C装备</div>
+        <div class="carry-chess-box">
+          <!-- 左边主C头像 -->
+          <div class="chess-img">
+            <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + teamInfo[0].TFTID + '.png'" />
+          </div>
+          <!-- 中部文字 -->
+          <div class="middle">
+            <div class="middle-title">必备</div>
+            <div class="middle-title">替代</div>
+          </div>
+          <!-- 右部图片 -->
+          <div class="right">
+            <div class="first-eq eq-img">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+            </div>
+            <div class="second-eq eq-img">
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+            </div>
+          </div>
+        </div>
+        <div class="hr-line" style="height: 0.1875rem" />
+      </div>
       <!-- 棋盘 -->
       <div class="main-chessboard" v-if="teamInfo[0]">
         <chess-board :needInfo="formatNeedInfo"></chess-board>
@@ -456,6 +485,38 @@ export default {
           i {
             font-size: 1.2rem;
             padding-right: 0.3125rem;
+          }
+        }
+      }
+    }
+    .carry-chess {
+      padding: 0 1.25rem;
+      .carry-chess-box {
+        margin-top: 0.625rem;
+        display: flex;
+        .chess-img {
+          img {
+            width: 4rem;
+            border: 0.25rem solid goldenrod;
+          }
+        }
+        .middle {
+          margin: 0 1rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          .middle-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+          }
+        }
+        .right {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          img {
+            margin: 0.3125rem 0.5rem;
+            width: 3rem;
           }
         }
       }
