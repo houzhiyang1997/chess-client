@@ -37,8 +37,10 @@
         <div class="st-content">{{ teamInfo[0].steadyContent }}</div>
         <div class="hr-line" style="height: 0.1875rem" />
       </div>
+      <!-- 海克斯科技 -->
       <div class="main-hex">
         <div class="title">海克斯科技</div>
+        <!-- 优选 -->
         <div id="first-choose" class="choose">
           <div class="left">
             <div class="hex-item" v-for="hexinfo in hexInfoList.slice(0, 3)" :key="hexinfo.id">
@@ -51,6 +53,7 @@
             <div class="choose-label">优选</div>
           </div>
         </div>
+        <!-- 次选 -->
         <div id="second-choose" class="choose">
           <div class="left">
             <div class="hex-item" v-for="hexinfo in hexInfoList.slice(3)" :key="hexinfo.id">
@@ -64,6 +67,18 @@
           </div>
         </div>
       </div>
+      <!-- 抢装顺序 -->
+      <div class="main-equip-order">
+        <div class="title">抢装顺序</div>
+        <div class="order">
+          <div class="orderitem" v-for="(equip, index) in equipOrderList" :key="equip.equipId">
+            <img :src="equip.imagePath" />
+            <i v-if="index !== equipOrderList.length - 1" class="iconfont icon-youjiantou2"></i>
+          </div>
+        </div>
+        <div class="hr-line" style="height: 0.1875rem" />
+      </div>
+      <!-- 棋盘 -->
       <div class="main-chessboard" v-if="teamInfo[0]">
         <chess-board :needInfo="formatNeedInfo"></chess-board>
         <div class="icon-detail" @click="myUtil.openAndClose(hiddenbox.content)">
@@ -141,7 +156,6 @@ export default {
       chessInfoList.value = res.chessinfo
       // 获取到信息后 处理iconlist
       iconList.value = countRJ(chessInfoList.value)
-      console.log(iconList.value)
       // 生成ids列表用于传入子组件
       raceIdList.value = getRaceAndJobIds(chessInfoList.value, 'race')
       jobIdList.value = getRaceAndJobIds(chessInfoList.value, 'job')
@@ -200,7 +214,7 @@ export default {
       }
       return result
     }
-    // 获取阵容的羁绊和职业的id列表，以便传入raceDetail子组件用于请求详情
+    // 构造阵容的羁绊和职业的id列表，以便传入raceDetail子组件用于请求详情
     const raceIdList = ref([])
     const jobIdList = ref([])
     const getRaceAndJobIds = (origin, category) => {
@@ -226,10 +240,18 @@ export default {
         return [...new Set(readyJob)]
       }
     }
+    // 获取抢装备顺序
+    const equipOrderList = ref([])
+    const getEquipOrder = async ids => {
+      const { data: res } = await api.getEquipById(ids)
+      console.log(res)
+      equipOrderList.value = res.equipinfo
+    }
     onMounted(async () => {
       await getTeam(props.teamId)
       getChessList(teamInfo.value[0].chessList)
       getHexList(teamInfo.value[0].hexList)
+      getEquipOrder(teamInfo.value[0].equipOrder)
       handleScroll()
     })
 
@@ -251,7 +273,8 @@ export default {
       iconList,
       hexInfoList,
       getHexList,
-      formatNeedInfo
+      formatNeedInfo,
+      equipOrderList
     }
   }
 }
@@ -412,6 +435,27 @@ export default {
             line-height: 2.1875rem;
             text-align: center;
             background: Silver;
+          }
+        }
+      }
+    }
+    .main-equip-order {
+      padding: 0.625rem 1.25rem;
+      .order {
+        margin-top: 0.625rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .orderitem {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          img {
+            width: 3rem;
+          }
+          i {
+            font-size: 1.2rem;
+            padding-right: 0.3125rem;
           }
         }
       }

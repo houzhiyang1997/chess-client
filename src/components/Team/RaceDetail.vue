@@ -44,7 +44,6 @@ export default {
     // 获取job详情
     const jobInfo = ref([])
     const getJobDetail = async () => {
-      console.log(porps.jobIdList)
       const { data: res } = await api.getJobById(porps.jobIdList.join(','))
       console.log(res)
       jobInfo.value = res.jobinfo
@@ -90,7 +89,7 @@ export default {
         position: absolute;
         left: 1.7rem;
         background: rgba(218, 165, 32, 0.37);
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         padding: 0 0.8rem;
       }
     }
