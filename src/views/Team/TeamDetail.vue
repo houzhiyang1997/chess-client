@@ -79,29 +79,25 @@
         <div class="hr-line" style="height: 0.1875rem" />
       </div>
       <!-- 主C装备 -->
-      <div class="carry-chess" v-if="teamInfo[0]">
+      <div class="carry-chess">
         <div class="title">主C装备</div>
         <div class="carry-chess-box">
           <!-- 左边主C头像 -->
-          <div class="chess-img">
-            <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + teamInfo[0].TFTID + '.png'" />
+          <div class="chess-img" v-if="carryChess.info.TFTID">
+            <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + carryChess.info.TFTID + '.png'" />
           </div>
           <!-- 中部文字 -->
           <div class="middle">
             <div class="middle-title">必备</div>
-            <div class="middle-title">替代</div>
+            <div class="middle-title" v-if="carryChess.secondEquip.length">替代</div>
           </div>
           <!-- 右部图片 -->
           <div class="right">
             <div class="first-eq eq-img">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img :src="item.imagePath" v-for="(item, index) in carryChess.firstEquip" :key="index" />
             </div>
             <div class="second-eq eq-img">
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
-              <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/201.png" alt="" />
+              <img :src="item.imagePath" alt="" v-for="(item, index) in carryChess.secondEquip" :key="index" />
             </div>
           </div>
         </div>
@@ -128,7 +124,7 @@ import hiddenBox from '@/components/Team/HiddenBox.vue'
 import api from '@/api/index'
 import myUtil from '@/util/utils'
 import { hiddenFooter } from '@/hooks/useHidden'
-import { ref, onMounted, watchEffect, nextTick, computed } from 'vue'
+import { ref, onMounted, watchEffect, nextTick, computed, reactive } from 'vue'
 export default {
   name: 'teamDetail',
   props: ['teamId'],
@@ -188,6 +184,22 @@ export default {
       // 生成ids列表用于传入子组件
       raceIdList.value = getRaceAndJobIds(chessInfoList.value, 'race')
       jobIdList.value = getRaceAndJobIds(chessInfoList.value, 'job')
+      // 获取到信息后，处理主C信息
+      carryChess.info = getCarryChess(chessInfoList.value, teamInfo.value[0].carryChess)
+      const { data: res2 } = await api.getEquipById(carryChess.info.recEquip)
+      carryChess.firstEquip = res2.equipinfo.slice(0, 3)
+      carryChess.secondEquip = res2.equipinfo.slice(3)
+    }
+
+    // 从请求到的chessInfoList中获取主C信息
+    const carryChess = reactive({
+      info: [],
+      firstEquip: [],
+      secondEquip: []
+    })
+    const getCarryChess = (origin, carryId) => {
+      const result = origin.filter(item => item.chessId === parseInt(carryId))
+      return result[0]
     }
 
     // 生成需要的格式化的数据传入chessboard组件
@@ -303,7 +315,9 @@ export default {
       hexInfoList,
       getHexList,
       formatNeedInfo,
-      equipOrderList
+      equipOrderList,
+      carryChess,
+      getCarryChess
     }
   }
 }
@@ -497,7 +511,7 @@ export default {
         .chess-img {
           img {
             width: 4rem;
-            border: 0.25rem solid goldenrod;
+            border: 0.125rem solid goldenrod;
           }
         }
         .middle {
