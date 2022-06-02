@@ -89,13 +89,13 @@
           <!-- 中部文字 -->
           <div class="middle">
             <div class="middle-title">必备</div>
-            <div class="middle-title" v-if="carryChess.secondEquip">替代</div>
+            <div class="middle-title" v-if="isSecondShow">替代</div>
           </div>
           <!-- 右部图片 -->
           <div class="right">
             <div class="first-eq eq-img">
               <div v-for="(item, index) in carryChess.firstEquip.equipinfo" :key="index">
-                <img :src="item.imagePath" />
+                <img class="eq-item" :src="item.imagePath" />
                 <div class="formula">
                   <div
                     class="formula-item"
@@ -103,17 +103,82 @@
                     :key="index2"
                   >
                     <img :src="item.imagePath" />
-                    <i class="iconfont icon-youjiantou2" v-if="index2 !== 1"></i>
+                    <!-- 处理传过来的散件相同只有一个值的情况 -->
+                    <img
+                      v-if="carryChess.firstEquip.formula[index].length === 1"
+                      :src="item.imagePath"
+                      style="margin-left: 0.5rem"
+                    />
                   </div>
                 </div>
               </div>
             </div>
             <div class="second-eq eq-img">
-              <img :src="item.imagePath" v-for="(item, index) in carryChess.secondEquip.equipinfo" :key="index" />
+              <div v-for="(item, index) in carryChess.secondEquip.equipinfo" :key="index">
+                <img class="eq-item" :src="item.imagePath" />
+                <div class="formula">
+                  <div
+                    class="formula-item"
+                    v-for="(item, index3) in carryChess.secondEquip.formula[index]"
+                    :key="index3"
+                  >
+                    <img :src="item.imagePath" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="hr-line" style="height: 0.1875rem" />
+      </div>
+      <div class="other-chess">
+        <div class="title">其他英雄装备</div>
+        <div class="other-chess-box">
+          <div class="left">
+            <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/400.png" alt="" />
+          </div>
+          <div class="right">
+            <div class="right-item">
+              <img class="equip" src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png" alt="" />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+            </div>
+            <div class="right-item">
+              <img class="equip" src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png" alt="" />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+            </div>
+            <div class="right-item">
+              <img class="equip" src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png" alt="" />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+              <img
+                class="equip-item"
+                src="https://game.gtimg.cn/images/lol/act/img/tft/equip/InfinityEdge.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 棋盘 -->
       <div class="main-chessboard" v-if="teamInfo[0]">
@@ -201,9 +266,12 @@ export default {
       const { data: res2 } = await api.getEquipById(carryChess.info.recEquip)
       carryChess.firstEquip = { equipinfo: res2.equipinfo.slice(0, 3), formula: res2.formula.slice(0, 3) }
       carryChess.secondEquip = { equipinfo: res2.equipinfo.slice(3), formula: res2.formula.slice(3) }
+      isSecondShow.value = carryChess.secondEquip.formula.length
     }
 
     // 从请求到的chessInfoList中获取主C信息
+
+    const isSecondShow = ref(0) // 控制备选装备栏位
     const carryChess = reactive({
       info: [],
       firstEquip: [],
@@ -329,7 +397,8 @@ export default {
       formatNeedInfo,
       equipOrderList,
       carryChess,
-      getCarryChess
+      getCarryChess,
+      isSecondShow
     }
   }
 }
@@ -507,6 +576,7 @@ export default {
           align-items: center;
           img {
             width: 3rem;
+            border-radius: 0.5rem;
           }
           i {
             font-size: 1.2rem;
@@ -521,6 +591,8 @@ export default {
         margin-top: 0.625rem;
         display: flex;
         .chess-img {
+          display: flex;
+          align-items: center;
           img {
             width: 4rem;
             border: 0.125rem solid goldenrod;
@@ -539,25 +611,57 @@ export default {
         .right {
           display: flex;
           flex-direction: column;
-          justify-content: space-around;
+          justify-content: space-between;
           .eq-img {
             display: flex;
-            img {
+            margin: 0.3125rem 0;
+            .eq-item {
               margin: 0.3125rem 0.5rem;
               width: 3rem;
+              border-radius: 0.5rem;
             }
             .formula {
               display: flex;
               justify-content: space-around;
               align-items: center;
-              img {
-                margin: 0;
-                width: 1.3rem;
-              }
               .formula-item {
+                img {
+                  margin: 0;
+                  width: 1.3rem;
+                }
                 display: flex;
                 align-items: center;
               }
+            }
+          }
+        }
+      }
+    }
+    .other-chess {
+      padding: 0.625rem 1.25rem;
+      .other-chess-box {
+        margin-top: 1.25rem;
+        display: flex;
+        align-items: flex-end;
+        .left {
+          img {
+            width: 3.5rem;
+          }
+        }
+        .right {
+          flex: 1;
+          display: flex;
+          justify-content: space-around;
+          .right-item {
+            .equip {
+              width: 2.5rem;
+              margin-left: 0.3125rem;
+              border-radius: 0.5rem;
+            }
+            .equip-item {
+              margin-left: 0.3125rem;
+              width: 1rem;
+              border-radius: 0.2rem;
             }
           }
         }
