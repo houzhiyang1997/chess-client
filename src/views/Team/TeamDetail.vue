@@ -167,7 +167,57 @@
       <!-- 棋盘 -->
       <div class="main-chessboard" v-if="teamInfo[0]">
         <chess-board :needInfo="formatNeedInfo"></chess-board>
+        <div class="title">优先三星</div>
+        <div class="three-box">
+          <div id="chess1" class="chess" v-if="carryChess.info.TFTID">
+            <img
+              class="chess-img"
+              :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + carryChess.info.TFTID + '.png'"
+            />
+            <div class="star" style="color: #c6aa4f">★★★</div>
+            <img class="chess-icon" src="http://106.12.140.161:81/image/icon-carry-hero.png" />
+          </div>
+          <div id="chess2" class="chess" v-if="otherChess.info.TFTID">
+            <img
+              class="chess-img"
+              :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + otherChess.info.TFTID + '.png'"
+            />
+            <div class="star" style="color: #c6aa4f">★★★</div>
+            <img class="chess-icon" src="http://106.12.140.161:81/image/icon-carry-hero.png" />
+          </div>
+        </div>
+        <div class="icon-detail" @click="myUtil.openAndClose(positionContentHidden.hiddenbox)">
+          站位分析<i class="iconfont icon-xiangxia"></i>
+        </div>
       </div>
+      <!-- 站位分析的隐藏盒子 -->
+      <hidden-box
+        v-if="teamInfo[0]"
+        ref="positionContentHidden"
+        title="站位分析"
+        :content="teamInfo[0].positionContent"
+      ></hidden-box>
+      <!-- 分割线 -->
+      <div style="padding: 0 1.25rem">
+        <div class="hr-line" style="height: 0.1875rem" />
+      </div>
+      <!-- 搜牌节奏 -->
+      <div class="search-time" v-if="teamInfo[0]">
+        <div class="title">搜牌节奏</div>
+        <div class="content">{{ teamInfo[0].searchTime }}</div>
+      </div>
+      <!-- 分割线 -->
+      <div style="padding: 0 1.25rem">
+        <div class="hr-line" style="height: 0.1875rem" />
+      </div>
+      <!-- 克制关系 -->
+      <div class="counter-relation" v-if="teamInfo[0]">
+        <div class="title">克制关系</div>
+        <div class="content">{{ teamInfo[0].counterRelation }}</div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="http://106.12.140.161:81/image/teamdetail-footer.png" />
     </div>
   </div>
 </template>
@@ -197,6 +247,7 @@ export default {
     hiddenFooter()
     // 隐藏盒子控制
     const equipContentHidden = ref()
+    const positionContentHidden = ref()
     const racedetail = ref()
     // #region 检测头部滚动实现高斯模糊
     const scrollTop = ref(0)
@@ -370,6 +421,7 @@ export default {
 
     return {
       equipContentHidden,
+      positionContentHidden,
       racedetail,
       myUtil,
       scrollTop,
@@ -467,6 +519,12 @@ export default {
     }
     .main-top {
       padding: 3.5rem 1.25rem 0 1.25rem;
+    }
+    .content {
+      margin-top: 0.3125rem;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+      text-align: justify; //两端对齐
     }
     .main-iconlist {
       padding: 0 1.25rem;
@@ -670,6 +728,43 @@ export default {
     }
     .main-chessboard {
       padding: 0 1.25rem;
+      .three-box {
+        margin-top: 1.25rem;
+        display: flex;
+        width: 8rem;
+        justify-content: space-between;
+        .chess {
+          width: 3.5rem;
+          height: 4rem;
+          position: relative;
+          .star {
+            font-size: 1.25rem;
+            position: absolute;
+            left: calc(50% - 1.5625rem);
+            bottom: -0.875rem;
+          }
+          .chess-img {
+            width: 3.5rem;
+          }
+          .chess-icon {
+            width: 1.5rem;
+            position: absolute;
+            top: -0.75rem;
+            left: 0;
+          }
+        }
+      }
+    }
+    .search-time {
+      padding: 0 1.25rem;
+    }
+    .counter-relation {
+      padding: 0 1.25rem;
+    }
+  }
+  .footer {
+    img {
+      width: 100%;
     }
   }
 }
