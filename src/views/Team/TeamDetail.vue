@@ -72,7 +72,7 @@
         <div class="title">抢装顺序</div>
         <div class="order">
           <div class="orderitem" v-for="(equip, index) in equipOrderList" :key="equip.equipId">
-            <img :src="equip.imagePath" />
+            <img :src="equip.imagePath" @click="handleEquipPop(equipOrderList, index, 0)" />
             <i v-if="index !== equipOrderList.length - 1" class="iconfont icon-youjiantou2"></i>
           </div>
         </div>
@@ -98,19 +98,23 @@
           <div class="right">
             <div class="first-eq eq-img">
               <div v-for="(item, index) in carryChess.firstEquip.equipinfo" :key="index">
-                <img class="eq-item" :src="item.imagePath" />
+                <img class="eq-item" :src="item.imagePath" @click="handleEquipPop(carryChess.firstEquip, index, 1)" />
                 <div class="formula">
                   <div
                     class="formula-item"
                     v-for="(item, index2) in carryChess.firstEquip.formula[index]"
                     :key="index2"
                   >
-                    <img :src="item.imagePath" />
+                    <img
+                      :src="item.imagePath"
+                      @click="handleEquipPop(carryChess.firstEquip.formula[index], index2, 0)"
+                    />
                     <!-- 处理传过来的散件相同只有一个值的情况 -->
                     <img
                       v-if="carryChess.firstEquip.formula[index].length === 1"
                       :src="item.imagePath"
                       style="margin-left: 0.5rem"
+                      @click="handleEquipPop(carryChess.firstEquip.formula[index], index2, 0)"
                     />
                   </div>
                 </div>
@@ -118,14 +122,24 @@
             </div>
             <div class="second-eq eq-img">
               <div v-for="(item, index) in carryChess.secondEquip.equipinfo" :key="index">
-                <img class="eq-item" :src="item.imagePath" />
+                <img class="eq-item" :src="item.imagePath" @click="handleEquipPop(carryChess.secondEquip, index, 1)" />
                 <div class="formula">
                   <div
                     class="formula-item"
                     v-for="(item, index3) in carryChess.secondEquip.formula[index]"
                     :key="index3"
                   >
-                    <img :src="item.imagePath" />
+                    <img
+                      :src="item.imagePath"
+                      @click="handleEquipPop(carryChess.secondEquip.formula[index], index3, 0)"
+                    />
+                    <!-- 处理传过来的散件相同只有一个值的情况 -->
+                    <img
+                      v-if="carryChess.secondEquip.formula[index].length === 1"
+                      :src="item.imagePath"
+                      style="margin-left: 0.5rem"
+                      @click="handleEquipPop(carryChess.secondEquip.formula[index], index3, 0)"
+                    />
                   </div>
                 </div>
               </div>
@@ -146,14 +160,15 @@
           </div>
           <div class="right">
             <div class="right-item" v-for="(item, index) in otherChess.firstEquip.equipinfo" :key="index">
-              <img class="equip" :src="item.imagePath" alt="" />
+              <img class="equip" :src="item.imagePath" @click="handleEquipPop(otherChess.firstEquip, index, 1)" />
               <div class="equip-item" v-for="(ele, index2) in otherChess.firstEquip.formula[index]" :key="index2">
-                <img :src="ele.imagePath" />
+                <img :src="ele.imagePath" @click="handleEquipPop(otherChess.firstEquip.formula[index], index2, 0)" />
                 <!-- 处理传过来的散件相同只有一个值的情况 -->
                 <img
                   v-if="otherChess.firstEquip.formula[index].length === 1"
                   :src="ele.imagePath"
                   style="margin-left: 0.5rem"
+                  @click="handleEquipPop(otherChess.firstEquip.formula[index], index2, 0)"
                 />
               </div>
             </div>
@@ -434,6 +449,7 @@ export default {
       name: '',
       imgUrl: '',
       description: '',
+      formula: [],
       flag: false
     })
     // 控制海克斯点击，为弹出组件提供信息
@@ -443,7 +459,23 @@ export default {
       popInfo.description = hexinfo.description
       popInfo.flag = true
     }
-    // 控制装备点击，为弹出组件提供信息
+    const handleEquipPop = (origin, index, type) => {
+      // type=0为散件 type=1为大件
+      let equipinfo = null
+      let formula = null
+      if (type === 0) {
+        equipinfo = origin
+        popInfo.formula = null
+      } else {
+        equipinfo = origin.equipinfo
+        formula = origin.formula
+        popInfo.formula = formula[index]
+      }
+      popInfo.name = equipinfo[index].name
+      popInfo.imgUrl = equipinfo[index].imagePath
+      popInfo.description = equipinfo[index].effect
+      popInfo.flag = true
+    }
     // 控制关闭，利用v-if销毁组件 使得组件重新渲染时走mounted方法显示
     const handlePopClose = () => {
       popInfo.flag = false
@@ -487,6 +519,7 @@ export default {
       handleClickChess,
       popInfo,
       handleHexPop,
+      handleEquipPop,
       handlePopClose
     }
   }
