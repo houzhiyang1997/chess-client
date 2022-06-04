@@ -44,7 +44,7 @@
         <div id="first-choose" class="choose">
           <div class="left">
             <div class="hex-item" v-for="hexinfo in hexInfoList.slice(0, 3)" :key="hexinfo.id">
-              <img :src="hexinfo.imgUrl" />
+              <img :src="hexinfo.imgUrl" @click="handleHexPop(hexinfo)" />
               <p>{{ hexinfo.name }}</p>
             </div>
           </div>
@@ -57,7 +57,7 @@
         <div id="second-choose" class="choose">
           <div class="left">
             <div class="hex-item" v-for="hexinfo in hexInfoList.slice(3)" :key="hexinfo.id">
-              <img :src="hexinfo.imgUrl" />
+              <img :src="hexinfo.imgUrl" @click="handleHexPop(hexinfo)" />
               <p>{{ hexinfo.name }}</p>
             </div>
           </div>
@@ -84,7 +84,10 @@
         <div class="carry-chess-box">
           <!-- 左边主C头像 -->
           <div class="chess-img" v-if="carryChess.info.TFTID">
-            <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + carryChess.info.TFTID + '.png'" />
+            <img
+              :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + carryChess.info.TFTID + '.png'"
+              @click="handleClickChess(carryChess.info.chessId)"
+            />
           </div>
           <!-- 中部文字 -->
           <div class="middle">
@@ -136,7 +139,10 @@
         <div class="title">其他英雄装备</div>
         <div class="other-chess-box">
           <div class="left" v-if="otherChess.info.TFTID">
-            <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + otherChess.info.TFTID + '.png'" />
+            <img
+              :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + otherChess.info.TFTID + '.png'"
+              @click="handleClickChess(otherChess.info.chessId)"
+            />
           </div>
           <div class="right">
             <div class="right-item" v-for="(item, index) in otherChess.firstEquip.equipinfo" :key="index">
@@ -166,13 +172,14 @@
       ></hidden-box>
       <!-- 棋盘 -->
       <div class="main-chessboard" v-if="teamInfo[0]">
-        <chess-board :needInfo="formatNeedInfo"></chess-board>
+        <chess-board :needInfo="formatNeedInfo" @handleClickChessBoard="handleClickChess"></chess-board>
         <div class="title">优先三星</div>
         <div class="three-box">
           <div id="chess1" class="chess" v-if="carryChess.info.TFTID">
             <img
               class="chess-img"
               :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + carryChess.info.TFTID + '.png'"
+              @click="handleClickChess(carryChess.info.chessId)"
             />
             <div class="star" style="color: #c6aa4f">★★★</div>
             <img class="chess-icon" src="http://106.12.140.161:81/image/icon-carry-hero.png" />
@@ -181,6 +188,7 @@
             <img
               class="chess-img"
               :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + otherChess.info.TFTID + '.png'"
+              @click="handleClickChess(otherChess.info.chessId)"
             />
             <div class="star" style="color: #c6aa4f">★★★</div>
             <img class="chess-icon" src="http://106.12.140.161:81/image/icon-carry-hero.png" />
@@ -219,6 +227,7 @@
     <div class="footer">
       <img src="http://106.12.140.161:81/image/teamdetail-footer.png" />
     </div>
+    <pop-detail :info="popInfo" v-if="popInfo.flag" @closePop="handlePopClose"></pop-detail>
   </div>
 </template>
 
@@ -228,10 +237,12 @@ import chessBoard from '@/components/Team/Chessboard.vue'
 import detailHeader from '@/components/DetailHeader.vue'
 import raceDetail from '@/components/Team/RaceDetail.vue'
 import hiddenBox from '@/components/Team/HiddenBox.vue'
+import popDetail from '@/components/PopDetail.vue'
 import api from '@/api/index'
 import myUtil from '@/util/utils'
 import { hiddenFooter } from '@/hooks/useHidden'
 import { ref, onMounted, watchEffect, nextTick, computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'teamDetail',
   props: ['teamId'],
@@ -240,9 +251,11 @@ export default {
     hiddenBox,
     teamItem,
     chessBoard,
-    raceDetail
+    raceDetail,
+    popDetail
   },
   setup(props) {
+    const router = useRouter()
     // 隐藏底部
     hiddenFooter()
     // 隐藏盒子控制
@@ -411,6 +424,31 @@ export default {
       console.log(res)
       equipOrderList.value = res.equipinfo
     }
+    // 根据英雄跳转到英雄详情的点击事件
+    const handleClickChess = chessId => {
+      // 本组件内调用则需要传参，如果用本方法处理子组件传过来的调用则不用显式传参，因为子组件emit已经传了
+      router.push(`/chessinforefresh/${chessId}`)
+    }
+    // 操作弹出盒子的信息
+    const popInfo = reactive({
+      name: '',
+      imgUrl: '',
+      description: '',
+      flag: false
+    })
+    // 控制海克斯点击，为弹出组件提供信息
+    const handleHexPop = hexinfo => {
+      popInfo.name = hexinfo.name
+      popInfo.imgUrl = hexinfo.imgUrl
+      popInfo.description = hexinfo.description
+      popInfo.flag = true
+    }
+    // 控制装备点击，为弹出组件提供信息
+    // 控制关闭，利用v-if销毁组件 使得组件重新渲染时走mounted方法显示
+    const handlePopClose = () => {
+      popInfo.flag = false
+      console.log('关闭了')
+    }
     onMounted(async () => {
       await getTeam(props.teamId)
       getChessList(teamInfo.value[0].chessList)
@@ -420,6 +458,7 @@ export default {
     })
 
     return {
+      router,
       equipContentHidden,
       positionContentHidden,
       racedetail,
@@ -444,7 +483,11 @@ export default {
       getCarryChess,
       otherChess,
       getOtherChess,
-      isSecondShow
+      isSecondShow,
+      handleClickChess,
+      popInfo,
+      handleHexPop,
+      handlePopClose
     }
   }
 }
