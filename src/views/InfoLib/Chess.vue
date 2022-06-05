@@ -17,7 +17,7 @@
     <div class="chess-list">
       <div
         class="chess-item"
-        v-for="(chess, index) in allChess"
+        v-for="(chess, index) in computedChess"
         :key="chess.chessId"
         :style="{
           backgroundImage: 'url(http://game.gtimg.cn/images/lol/tft/cham-icons/624x318/' + chess.TFTID + '.jpg)'
@@ -30,7 +30,7 @@
           <div class="price">{{ chess.price }}</div>
         </div>
         <div class="race-job" v-if="allChess.races !== '' && allChess.jobs !== ''">
-          <div class="rj-item" v-for="(rj, indexRJ) in computedRJ(index)" :key="indexRJ">{{ rj }}</div>
+          <div class="rj-item" v-for="(rj, indexRJ) in computedRJ(computedChess, index)" :key="indexRJ">{{ rj }}</div>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api from '@/api/index'
 export default {
   setup() {
@@ -51,14 +51,20 @@ export default {
       console.log(res)
       allChess.value = res.allChess
     }
+    // 模糊查询英雄
+    const computedChess = computed(() => {
+      return allChess.value.filter(
+        item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
+      )
+    })
     // 动态计算羁绊和职业列表
-    const computedRJ = index => {
-      return [...allChess.value[index].races.split(','), ...allChess.value[index].jobs.split(',')]
+    const computedRJ = (origin, index) => {
+      return [...origin[index].races.split(','), ...origin[index].jobs.split(',')]
     }
     onMounted(async () => {
       await getAllChess()
     })
-    return { searchValue, allChess, getAllChess, computedRJ }
+    return { searchValue, allChess, getAllChess, computedChess, computedRJ }
   }
 }
 </script>
