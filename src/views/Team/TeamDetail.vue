@@ -242,6 +242,7 @@
     <div class="footer">
       <img src="http://106.12.140.161:81/image/teamdetail-footer.png" />
     </div>
+    <!-- 弹出层 -->
     <pop-detail :info="popInfo" v-if="popInfo.flag" @closePop="handlePopClose"></pop-detail>
   </div>
 </template>

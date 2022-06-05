@@ -4,7 +4,7 @@
     <div class="search">
       <van-search class="search-input" v-model="searchValue" shape="round" placeholder="搜索" />
       <i class="iconfont icon-a-Frame1455"></i>
-      <i class="iconfont icon-shaixuan" @click="isRightBarShow = true"></i>
+      <i class="iconfont icon-shaixuan" @click="showPopup"></i>
     </div>
     <!-- 标题栏 -->
     <div class="title-bar">
@@ -37,22 +37,22 @@
     </div>
     <!-- 侧边筛选 -->
     <div class="right-bar">
-      <van-tree-select
-        height="100vh"
-        v-show="isRightBarShow"
-        v-model:active-id="activeId"
-        v-model:main-active-index="activeIndex"
-        :items="items"
-      />
+      <van-popup v-model:show="show" position="right" :style="{ height: '80%', width: '80%' }" round>
+        <chess-search-pop></chess-search-pop>
+      </van-popup>
     </div>
   </div>
 </template>
 
 <script>
+import chessSearchPop from '@/components/InfoLib/ChessSearchPop.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/api/index'
 export default {
+  components: {
+    chessSearchPop
+  },
   setup() {
     const router = useRouter()
     // 搜索框双向绑定值
@@ -71,37 +71,10 @@ export default {
       )
     })
     // 侧边栏查询
-    const isRightBarShow = ref(false)
-    const activeId = ref(1)
-    const activeIndex = ref(0)
-    const items = [
-      {
-        text: '浙江',
-        children: [
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 },
-          { text: '杭州', id: 1 },
-          { text: '温州', id: 2 }
-        ]
-      },
-      {
-        text: '江苏',
-        children: [
-          { text: '南京', id: 5 },
-          { text: '无锡', id: 6 }
-        ]
-      }
-    ]
+    const show = ref(false)
+    const showPopup = () => {
+      show.value = true
+    }
     // 点击英雄跳转详情
     const handleClickChess = chessId => {
       router.push(`/chessinforefresh/${chessId}`)
@@ -120,10 +93,8 @@ export default {
       computedChess,
       handleClickChess,
       computedRJ,
-      isRightBarShow,
-      items,
-      activeId,
-      activeIndex
+      show,
+      showPopup
     }
   }
 }
@@ -199,12 +170,6 @@ export default {
         }
       }
     }
-  }
-  .right-bar {
-    width: 80%;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 }
 </style>
