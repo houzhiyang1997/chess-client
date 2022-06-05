@@ -17,7 +17,7 @@
     <div class="chess-list">
       <div
         class="chess-item"
-        v-for="chess in allChess"
+        v-for="(chess, index) in allChess"
         :key="chess.chessId"
         :style="{
           backgroundImage: 'url(http://game.gtimg.cn/images/lol/tft/cham-icons/624x318/' + chess.TFTID + '.jpg)'
@@ -29,10 +29,8 @@
           <i class="iconfont icon-jinbi"></i>
           <div class="price">{{ chess.price }}</div>
         </div>
-        <div class="race-job">
-          <div class="rj-item">炼金科技</div>
-          <div class="rj-item">刺客</div>
-          <div class="rj-item">强袭战士</div>
+        <div class="race-job" v-if="allChess.races !== '' && allChess.jobs !== ''">
+          <div class="rj-item" v-for="(rj, indexRJ) in computedRJ(index)" :key="indexRJ">{{ rj }}</div>
         </div>
       </div>
     </div>
@@ -54,10 +52,13 @@ export default {
       allChess.value = res.allChess
     }
     // 动态计算羁绊和职业列表
-    onMounted(() => {
-      getAllChess()
+    const computedRJ = index => {
+      return [...allChess.value[index].races.split(','), ...allChess.value[index].jobs.split(',')]
+    }
+    onMounted(async () => {
+      await getAllChess()
     })
-    return { searchValue, allChess, getAllChess }
+    return { searchValue, allChess, getAllChess, computedRJ }
   }
 }
 </script>
@@ -94,6 +95,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 3rem;
     .chess-item {
       margin: 0.625rem 0;
       border-radius: 1rem;
@@ -102,6 +104,7 @@ export default {
       background-size: cover;
       color: white;
       font-weight: 600;
+      box-shadow: 8.75rem 0px 3.125rem 0 #2c2b2b inset;
       .title {
         margin: 0.625rem 0.625rem 0.3125rem 0.625rem;
         font-size: 0.875rem;
@@ -117,6 +120,7 @@ export default {
         }
         i {
           font-size: 0.75rem;
+          color: goldenrod;
         }
       }
       .race-job {
