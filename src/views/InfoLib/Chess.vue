@@ -4,7 +4,7 @@
     <div class="search">
       <van-search class="search-input" v-model="searchValue" shape="round" placeholder="搜索" />
       <i class="iconfont icon-a-Frame1455"></i>
-      <i class="iconfont icon-shaixuan"></i>
+      <i class="iconfont icon-shaixuan" @click="isRightBarShow = true"></i>
     </div>
     <!-- 标题栏 -->
     <div class="title-bar">
@@ -17,6 +17,7 @@
     <div class="chess-list">
       <div
         class="chess-item"
+        @click="handleClickChess(chess.chessId)"
         v-for="(chess, index) in computedChess"
         :key="chess.chessId"
         :style="{
@@ -34,14 +35,26 @@
         </div>
       </div>
     </div>
+    <!-- 侧边筛选 -->
+    <div class="right-bar">
+      <van-tree-select
+        height="100vh"
+        v-show="isRightBarShow"
+        v-model:active-id="activeId"
+        v-model:main-active-index="activeIndex"
+        :items="items"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/api/index'
 export default {
   setup() {
+    const router = useRouter()
     // 搜索框双向绑定值
     const searchValue = ref('')
     // 获取所有英雄列表
@@ -57,6 +70,42 @@ export default {
         item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
       )
     })
+    // 侧边栏查询
+    const isRightBarShow = ref(false)
+    const activeId = ref(1)
+    const activeIndex = ref(0)
+    const items = [
+      {
+        text: '浙江',
+        children: [
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 },
+          { text: '杭州', id: 1 },
+          { text: '温州', id: 2 }
+        ]
+      },
+      {
+        text: '江苏',
+        children: [
+          { text: '南京', id: 5 },
+          { text: '无锡', id: 6 }
+        ]
+      }
+    ]
+    // 点击英雄跳转详情
+    const handleClickChess = chessId => {
+      router.push(`/chessinforefresh/${chessId}`)
+    }
     // 动态计算羁绊和职业列表
     const computedRJ = (origin, index) => {
       return [...origin[index].races.split(','), ...origin[index].jobs.split(',')]
@@ -64,13 +113,25 @@ export default {
     onMounted(async () => {
       await getAllChess()
     })
-    return { searchValue, allChess, getAllChess, computedChess, computedRJ }
+    return {
+      searchValue,
+      allChess,
+      getAllChess,
+      computedChess,
+      handleClickChess,
+      computedRJ,
+      isRightBarShow,
+      items,
+      activeId,
+      activeIndex
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .chess-container {
+  position: relative;
   .search {
     padding: 0 0.625rem;
     display: flex;
@@ -138,6 +199,12 @@ export default {
         }
       }
     }
+  }
+  .right-bar {
+    width: 80%;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

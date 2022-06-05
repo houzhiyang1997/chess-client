@@ -457,6 +457,7 @@ export default {
       popInfo.name = hexinfo.name
       popInfo.imgUrl = hexinfo.imgUrl
       popInfo.description = hexinfo.description
+      popInfo.formula = null
       popInfo.flag = true
     }
     const handleEquipPop = (origin, index, type) => {

@@ -12,7 +12,8 @@ import {
   Rate,
   Popup,
   Tab,
-  Tabs
+  Tabs,
+  TreeSelect
 } from 'vant'
 const config = [
   Tabbar,
@@ -28,6 +29,7 @@ const config = [
   Rate,
   Popup,
   Tab,
-  Tabs
+  Tabs,
+  TreeSelect
 ]
 export default config

@@ -10,13 +10,14 @@ const routes = [
   { path: '/databoard', component: () => import('@/views/DataBoard.vue') },
   {
     path: '/infolib',
+    redirect: '/infolib/chess',
     component: () => import('@/views/InfoLib.vue'),
     children: [
-      { path: '/infolib/chess', component: () => import('@/views/InfoLib/Chess.vue') },
-      { path: '/infolib/equipment', component: () => import('@/views/InfoLib/Equipment.vue') },
-      { path: '/infolib/race', component: () => import('@/views/InfoLib/Race.vue') },
-      { path: '/infolib/hex', component: () => import('@/views/InfoLib/Hex.vue') },
-      { path: '/infolib/smallhero', component: () => import('@/views/InfoLib/SmallHero.vue') }
+      { path: 'chess', component: () => import('@/views/InfoLib/Chess.vue') },
+      { path: 'equipment', component: () => import('@/views/InfoLib/Equipment.vue') },
+      { path: 'race', component: () => import('@/views/InfoLib/Race.vue') },
+      { path: 'hex', component: () => import('@/views/InfoLib/Hex.vue') },
+      { path: 'smallhero', component: () => import('@/views/InfoLib/SmallHero.vue') }
     ]
   },
   { path: '/aboutme', component: () => import('@/views/AboutMe.vue') }
