@@ -37,7 +37,7 @@
     </div>
     <!-- 侧边筛选 -->
     <div class="right-bar">
-      <van-popup v-model:show="show" position="right" :style="{ height: '80%', width: '80%' }" round>
+      <van-popup v-model:show="show" position="right" :style="{ height: '70%', width: '80%' }" round>
         <chess-search-pop></chess-search-pop>
       </van-popup>
     </div>

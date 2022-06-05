@@ -32,7 +32,7 @@ const getTeamById = teamId => {
   })
 }
 
-// 获取全部新闻列表
+// 获取全部英雄列表
 const getAllChess = () => {
   return http({
     method: 'GET',
@@ -47,7 +47,15 @@ const getChessById = id => {
   })
 }
 
-// 根据raceid获取英雄详情
+// 获取全部race列表
+const getAllRace = () => {
+  return http({
+    method: 'GET',
+    url: '/getallrace'
+  })
+}
+
+// 根据raceid获取race详情
 const getRaceById = id => {
   return http({
     method: 'GET',
@@ -55,7 +63,15 @@ const getRaceById = id => {
   })
 }
 
-// 根据jobid获取英雄详情
+// 获取全部job列表
+const getAllJob = () => {
+  return http({
+    method: 'GET',
+    url: '/getalljob'
+  })
+}
+
+// 根据jobid获取job详情
 const getJobById = id => {
   return http({
     method: 'GET',
@@ -63,7 +79,7 @@ const getJobById = id => {
   })
 }
 
-// 根据equipid获取英雄详情
+// 根据equipid获取装备详情
 const getEquipById = id => {
   return http({
     method: 'GET',
@@ -79,7 +95,7 @@ const getSimilar = (jobs, races, id) => {
   })
 }
 
-// 根据equipid获取英雄详情
+// 根据equipid获取海克斯详情
 const getHexById = id => {
   return http({
     method: 'GET',
@@ -98,5 +114,7 @@ export default {
   getJobById,
   getEquipById,
   getSimilar,
-  getHexById
+  getHexById,
+  getAllRace,
+  getAllJob
 }
