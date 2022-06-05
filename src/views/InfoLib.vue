@@ -1,9 +1,29 @@
 <template>
-  <div>infolib</div>
+  <div class="infolib-container">
+    <!-- 头部导航 -->
+    <van-tabs v-model:active="active" animated :swipeable="true" color="#28C281">
+      <van-tab title="英雄" to="/infolib/chess"></van-tab>
+      <van-tab title="装备" to="/infolib/equipment"></van-tab>
+      <van-tab title="羁绊" to="/infolib/race"></van-tab>
+      <van-tab title="海克斯" to="/infolib/hex"></van-tab>
+      <van-tab title="小小英雄" to="/infolib/smallhero"></van-tab>
+    </van-tabs>
+    <!-- 子视图 -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-export default {}
+import { ref } from 'vue'
+// import { useRoute } from 'vue-router'
+export default {
+  setup() {
+    const active = ref(0)
+    return {
+      active
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped></style>

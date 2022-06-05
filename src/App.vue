@@ -28,8 +28,5 @@ export default {
 html,
 body {
   width: 100%;
-
-  touch-action: none;
-  touch-action: pan-y;
 }
 </style>
