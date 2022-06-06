@@ -1,30 +1,30 @@
 <template>
   <div class="race-container">
+    <!-- 顶部信息 -->
     <div class="top">
       <div class="version">版本号 12.10</div>
-      <div class="race active">种族</div>
+      <div class="race" :class="!isJobList ? 'active' : ''" @click="isJobList = false">种族</div>
       <span>|</span>
-      <div class="job">职业</div>
+      <div class="job" :class="isJobList ? 'active' : ''" @click="isJobList = true">职业</div>
     </div>
+    <!-- 羁绊视图 -->
     <div class="race-list">
-      <div class="race-item">
+      <div class="item" v-for="(rj, index) in computeRaceOrJob" :key="index">
         <div class="left">
           <div class="title">
-            <img src="https://game.gtimg.cn/images/lol/act/img/tft/origins/6102.png" />
-            <div class="name">炼金科技</div>
+            <img :src="rj.imagePath" />
+            <div class="name">{{ rj.name }}</div>
           </div>
           <div class="content">
-            在跌入75%生命值以下之后，【炼金科技】英雄们获得伤害减免、攻击速度，并且每秒回复其一定比例的最大生命值，持续一定时间。
+            {{ rj.introduce }}
           </div>
         </div>
         <div class="right">
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/champions/352.png" alt="" />
+          <img
+            :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + item.TFTID + '.png'"
+            v-for="(item, index2) in filterChess(rj.name)"
+            :key="index2"
+          />
         </div>
       </div>
       <div class="hr-line" style="height: 2px"></div>
@@ -33,7 +33,60 @@
 </template>
 
 <script>
-export default {}
+import { computed, onMounted, ref } from 'vue'
+import api from '@/api/index'
+export default {
+  setup() {
+    // 查询羁绊列表
+    const raceList = ref([])
+    const getRaceList = async () => {
+      const { data: res } = await api.getAllRace()
+      raceList.value = res.allRace
+    }
+    // 查询职业列表
+    const jobList = ref([])
+    const getJobList = async () => {
+      const { data: res } = await api.getAllJob()
+      jobList.value = res.allJob
+    }
+    // 查询英雄列表 用于筛选羁绊和职业对应的英雄
+    const chessList = ref([])
+    const getChessList = async () => {
+      const { data: res } = await api.getAllChess()
+      console.log(res)
+      chessList.value = res.allChess
+    }
+    // 筛选英雄
+    const filterChess = condition => {
+      return chessList.value.filter(item => item.races.includes(condition) || item.jobs.includes(condition))
+    }
+    // 选择数据源是raceList还是jobList
+    const isJobList = ref(false)
+    const computeRaceOrJob = computed(() => {
+      if (isJobList.value) {
+        return jobList.value
+      } else {
+        return raceList.value
+      }
+    })
+    onMounted(async () => {
+      await getChessList()
+      getRaceList()
+      getJobList()
+    })
+    return {
+      raceList,
+      getRaceList,
+      jobList,
+      getJobList,
+      chessList,
+      getChessList,
+      filterChess,
+      isJobList,
+      computeRaceOrJob
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -43,6 +96,7 @@ export default {}
 }
 .race-container {
   margin-top: 3.25rem;
+  margin-bottom: 3.25rem;
   .active {
     color: #21ad73;
     font-weight: 600;
@@ -61,7 +115,7 @@ export default {}
     }
   }
   .race-list {
-    .race-item {
+    .item {
       padding: 0.625rem 1.25rem;
       display: flex;
       justify-content: space-between;
