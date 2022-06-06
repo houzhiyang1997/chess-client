@@ -68,7 +68,14 @@ export default {
     }
     // 模糊查询英雄
     const computedChess = computed(() => {
-      console.log('计算属性触发了')
+      if (searchValue.value !== '') {
+        // 只要触发了搜索，就重置查询条件
+        resetQuery()
+        return allChess.value.filter(
+          item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
+        )
+      }
+      // 三个条件可以选其一 也可以多选
       if (queryList.race !== '' || queryList.job !== '' || queryList.price !== '') {
         return allChess.value.filter(
           item =>
@@ -78,6 +85,7 @@ export default {
             item.price.toString().includes(queryList.price)
         )
       }
+      // 处理在没有设置查询条件时 返回所有信息
       return allChess.value.filter(
         item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
       )
@@ -96,7 +104,14 @@ export default {
       race: '',
       job: '',
       price: ''
-    }) // 顺序为 race job price
+    })
+    // 重置查询条件
+    const resetQuery = () => {
+      queryList.race = ''
+      queryList.job = ''
+      queryList.price = ''
+    }
+    // 顺序为 race job price
     const handlePopComfirm = val => {
       queryList.race = val[0]
       queryList.job = val[1]
@@ -127,7 +142,8 @@ export default {
       showPopup,
       handlePopCancel,
       handlePopComfirm,
-      queryList
+      queryList,
+      resetQuery
     }
   }
 }
