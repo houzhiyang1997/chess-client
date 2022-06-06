@@ -1,20 +1,23 @@
 <template>
   <div class="chess-container">
-    <!-- 顶部搜索 -->
-    <div class="search">
-      <van-search class="search-input" v-model="searchValue" shape="round" placeholder="搜索" />
-      <i class="iconfont icon-a-Frame1455"></i>
-      <i class="iconfont icon-shaixuan" @click="showPopup"></i>
-    </div>
-    <!-- 标题栏 -->
-    <div class="title-bar">
-      <div>英雄<i class="iconfont icon-xiangxia"></i></div>
-      <div>种族</div>
-      <div>职业</div>
-      <div>消耗<i class="iconfont icon-xiangxia"></i></div>
+    <div class="top">
+      <!-- 顶部搜索 -->
+      <div class="search">
+        <van-search class="search-input" v-model="searchValue" shape="round" placeholder="搜索" />
+        <i class="iconfont icon-a-Frame1455" @click="isSmall = !isSmall"></i>
+        <i class="iconfont icon-shaixuan" @click="showPopup"></i>
+      </div>
+      <!-- 标题栏 -->
+      <div class="title-bar">
+        <div>英雄<i class="iconfont icon-xiangxia"></i></div>
+        <div>种族</div>
+        <div>职业</div>
+        <div>消耗<i class="iconfont icon-xiangxia"></i></div>
+      </div>
     </div>
     <!-- 英雄列表 -->
-    <div class="chess-list">
+    <!-- 大图模式 -->
+    <div class="chess-list" v-if="!isSmall">
       <div
         class="chess-item"
         @click="handleClickChess(chess.chessId)"
@@ -33,6 +36,25 @@
         <div class="race-job" v-if="allChess.races !== '' && allChess.jobs !== ''">
           <div class="rj-item" v-for="(rj, indexRJ) in computedRJ(computedChess, index)" :key="indexRJ">{{ rj }}</div>
         </div>
+      </div>
+    </div>
+    <!-- 小图模式 -->
+    <div class="chess-list-small" v-if="isSmall">
+      <div
+        class="chess-item"
+        v-for="chess in computedChess"
+        :key="chess.chessId"
+        @click="handleClickChess(chess.chessId)"
+      >
+        <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + chess.TFTID + '.png'" />
+        <div class="name">{{ chess.displayName }}</div>
+        <div class="races">
+          <div class="item" v-for="race in chess.races.split(',')" :key="race">{{ race }}</div>
+        </div>
+        <div class="jobs">
+          <div class="item" v-for="job in chess.jobs.split(',')" :key="job">{{ job }}</div>
+        </div>
+        <div class="price">{{ chess.price }}</div>
       </div>
     </div>
     <!-- 侧边筛选 -->
@@ -90,6 +112,8 @@ export default {
         item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
       )
     })
+    // 控制英雄list大图还是小图模式
+    const isSmall = ref(false)
     // 侧边栏查询
     const show = ref(false)
     const showPopup = () => {
@@ -139,6 +163,7 @@ export default {
       handleClickChess,
       computedRJ,
       show,
+      isSmall,
       showPopup,
       handlePopReset,
       handlePopComfirm,
@@ -152,29 +177,40 @@ export default {
 <style lang="less" scoped>
 .chess-container {
   position: relative;
-  .search {
-    padding: 0 0.625rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    .search-input {
-      flex: 1;
+  .top {
+    width: 100%;
+    position: fixed;
+    top: 2.65rem;
+    left: 0;
+    z-index: 222;
+    .search {
+      background: white;
+      padding: 0 0.625rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .search-input {
+        flex: 1;
+      }
+      i {
+        font-size: 1.25rem;
+        margin-left: 0.625rem;
+      }
     }
-    i {
-      font-size: 1.25rem;
-      margin-left: 0.625rem;
-    }
-  }
-  .title-bar {
-    background: rgba(212, 211, 211, 0.25);
-    padding: 0.3125rem 0.625rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.75rem;
-    color: grey;
-    i {
+    .title-bar {
+      // background: white;
+      z-index: 223;
+      background: rgb(247, 244, 244);
+      padding: 0.3125rem 0.625rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 0.75rem;
+      text-align: center;
+      color: grey;
+      i {
+        font-size: 0.75rem;
+      }
     }
   }
   .chess-list {
@@ -183,6 +219,7 @@ export default {
     justify-content: center;
     align-items: center;
     margin-bottom: 3rem;
+    margin-top: 8.75rem;
     .chess-item {
       margin: 0.625rem 0;
       border-radius: 1rem;
@@ -217,6 +254,37 @@ export default {
         .rj-item {
           margin-right: 0.625rem;
         }
+      }
+    }
+  }
+  .chess-list-small {
+    padding: 0 0.625rem;
+    margin-bottom: 3rem;
+    margin-top: 8.75rem;
+    .chess-item {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      margin: 1.25rem 0;
+      img {
+        border-radius: 0.5rem;
+        width: 3rem;
+        margin-right: 0.3125rem;
+      }
+      .name {
+        min-width: 3.625rem;
+      }
+      .races {
+        min-width: 4.375rem;
+        margin: 0 2rem 0 0.3125rem;
+      }
+      .jobs {
+        min-width: 4rem;
+        margin-right: 2rem;
+      }
+      .price {
+        text-align: center;
+        min-width: 1.875rem;
       }
     }
   }
