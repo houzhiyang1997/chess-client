@@ -9,10 +9,12 @@
       </div>
       <!-- 标题栏 -->
       <div class="title-bar">
-        <div>英雄<i class="iconfont icon-xiangxia"></i></div>
+        <div>英雄☆☆☆</div>
         <div>种族</div>
         <div>职业</div>
-        <div>消耗<i class="iconfont icon-xiangxia"></i></div>
+        <div @click="isdecSort = !isdecSort" :class="isdecSort ? 'active' : ''">
+          消耗<i class="iconfont icon-xiangxia"></i>
+        </div>
       </div>
     </div>
     <!-- 英雄列表 -->
@@ -99,21 +101,37 @@ export default {
       }
       // 三个条件可以选其一 也可以多选
       if (queryList.race !== '' || queryList.job !== '' || queryList.price !== '') {
-        return allChess.value.filter(
-          item =>
-            (item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)) &&
-            item.jobs.includes(queryList.job) &&
-            item.races.includes(queryList.race) &&
-            item.price.toString().includes(queryList.price)
-        )
+        return allChess.value
+          .filter(
+            item =>
+              (item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)) &&
+              item.jobs.includes(queryList.job) &&
+              item.races.includes(queryList.race) &&
+              item.price.toString().includes(queryList.price)
+          )
+          .sort((a, b) => {
+            return a.price - b.price
+          })
       }
-      // 处理在没有设置查询条件时 返回所有信息
-      return allChess.value.filter(
-        item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
-      )
+      // 降序
+      if (isdecSort.value) {
+        return allChess.value
+          .filter(item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value))
+          .sort((a, b) => {
+            return b.price - a.price
+          })
+      }
+      // 处理在没有设置查询条件时 返回所有信息 默认升序
+      return allChess.value
+        .filter(item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value))
+        .sort((a, b) => {
+          return a.price - b.price
+        })
     })
     // 控制英雄list大图还是小图模式
     const isSmall = ref(false)
+    // 控制信息升序还是降序
+    const isdecSort = ref(false)
     // 侧边栏查询
     const show = ref(false)
     const showPopup = () => {
@@ -162,6 +180,7 @@ export default {
       computedChess,
       handleClickChess,
       computedRJ,
+      isdecSort,
       show,
       isSmall,
       showPopup,
@@ -177,6 +196,9 @@ export default {
 <style lang="less" scoped>
 .chess-container {
   position: relative;
+  .active {
+    color: #21ad73;
+  }
   .top {
     width: 100%;
     position: fixed;
@@ -272,11 +294,11 @@ export default {
         margin-right: 0.3125rem;
       }
       .name {
-        min-width: 3.625rem;
+        min-width: 4.25rem;
       }
       .races {
-        min-width: 4.375rem;
-        margin: 0 2rem 0 0.3125rem;
+        min-width: 4.5rem;
+        margin: 0 1.625rem 0 0.3125rem;
       }
       .jobs {
         min-width: 4rem;
