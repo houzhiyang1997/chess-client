@@ -2,14 +2,14 @@
   <div class="equipment-container">
     <div class="title">装备列表</div>
     <div class="equip-list">
-      <div class="equip-item">
+      <div class="equip-item" v-for="equip in allEquip" :key="equip.equipId">
         <div class="left">
-          <img src="https://game.gtimg.cn/images/lol/act/img/tft/equip/Hextech.png" />
+          <img :src="equip.imagePath" />
         </div>
         <div class="right">
-          <div class="name">暴风大剑</div>
+          <div class="name">{{ equip.name }}</div>
           <div class="effect">效果</div>
-          <div class="content">+10攻击力</div>
+          <div class="content">{{ equip.effect }}</div>
         </div>
       </div>
     </div>
@@ -17,7 +17,26 @@
 </template>
 
 <script>
-export default {}
+import { onMounted, ref } from 'vue'
+import api from '@/api/index'
+export default {
+  setup() {
+    // 装备列表
+    const allEquip = ref([])
+    const getAllEquip = async () => {
+      const { data: res } = await api.getAllEquip()
+      console.log(res)
+      allEquip.value = res.allEquip
+    }
+    onMounted(() => {
+      getAllEquip()
+    })
+    return {
+      allEquip,
+      getAllEquip
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -32,6 +51,7 @@ export default {}
   .equip-list {
     .equip-item {
       display: flex;
+      margin-bottom: 1.25rem;
       .left {
         img {
           width: 3rem;
@@ -51,6 +71,8 @@ export default {}
         .content {
           font-size: 0.875rem;
           color: grey;
+          white-space: pre-wrap;
+          text-align: justify; //两端对齐
         }
       }
     }

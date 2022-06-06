@@ -79,6 +79,14 @@ const getJobById = id => {
   })
 }
 
+// 获取全部equip列表
+const getAllEquip = () => {
+  return http({
+    method: 'GET',
+    url: '/getallequip'
+  })
+}
+
 // 根据equipid获取装备详情
 const getEquipById = id => {
   return http({
@@ -116,5 +124,6 @@ export default {
   getSimilar,
   getHexById,
   getAllRace,
-  getAllJob
+  getAllJob,
+  getAllEquip
 }
