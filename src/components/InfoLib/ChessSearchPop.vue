@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="bottom">
-      <button class="cancel" @click="handleClickCancel">取消</button>
+      <button class="reset" @click="handleClickReset">重置</button>
       <button class="comfirm" @click="handleClickComfirm">确定</button>
     </div>
   </div>
@@ -77,8 +77,14 @@ export default {
     // 设置价格列表
     const priceList = ref(['1', '2', '3', '4', '5'])
     // 处理点击取消，事件委托给父 设置show隐藏
-    const handleClickCancel = () => {
-      emit('searchPopCancel')
+    const handleClickReset = () => {
+      // 先设置样式
+      activeRaceId.value = -1
+      activeJobId.value = -1
+      activePriceId.value = -1
+      queryList.value = ['', '', '']
+      // 再委托父更新页面
+      emit('handleClickReset')
     }
     // 处理单击确定，事件委托给父，根据查询条件显示信息
     const handleClickComfirm = () => {
@@ -118,7 +124,7 @@ export default {
       jobList,
       getJobList,
       priceList,
-      handleClickCancel,
+      handleClickReset,
       handleClickComfirm,
       handleClickItem,
       activeRaceId,
@@ -166,7 +172,7 @@ export default {
       border-radius: 1rem;
       padding: 0.1875rem 0.3125rem;
     }
-    .cancel {
+    .reset {
       background: rgb(65, 62, 62);
     }
     .comfirm {

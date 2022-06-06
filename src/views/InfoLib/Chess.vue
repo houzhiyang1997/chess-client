@@ -38,7 +38,7 @@
     <!-- 侧边筛选 -->
     <div class="right-bar">
       <van-popup v-model:show="show" position="right" :style="{ height: '80%', width: '80%' }" round>
-        <chess-search-pop @searchPopCancel="handlePopCancel" @searchPopComfirm="handlePopComfirm"></chess-search-pop>
+        <chess-search-pop @handleClickReset="handlePopReset" @searchPopComfirm="handlePopComfirm"></chess-search-pop>
       </van-popup>
     </div>
   </div>
@@ -95,9 +95,9 @@ export default {
     const showPopup = () => {
       show.value = true
     }
-    // 处理子组件传来的取消关闭
-    const handlePopCancel = () => {
-      show.value = false
+    // 处理子组件传来的重置
+    const handlePopReset = () => {
+      resetQuery()
     }
     // 处理子组件传来的查询条件
     const queryList = reactive({
@@ -140,7 +140,7 @@ export default {
       computedRJ,
       show,
       showPopup,
-      handlePopCancel,
+      handlePopReset,
       handlePopComfirm,
       queryList,
       resetQuery
