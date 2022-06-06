@@ -3,24 +3,48 @@
     <div id="race">
       <div class="title">羁绊</div>
       <div class="choose-box">
-        <div class="choose-item" v-for="race in raceList" :key="race.raceId">{{ race.name }}</div>
+        <div
+          class="choose-item"
+          v-for="(race, index) in raceList"
+          :key="race.raceId"
+          @click="handleClickItem('race', race.name, index)"
+          :class="activeRaceId === index ? 'active' : ''"
+        >
+          {{ race.name }}
+        </div>
       </div>
     </div>
     <div id="job">
       <div class="title">职业</div>
       <div class="choose-box">
-        <div class="choose-item" v-for="job in jobList" :key="job.jobId">{{ job.name }}</div>
+        <div
+          class="choose-item"
+          v-for="(job, index) in jobList"
+          :key="job.jobId"
+          @click="handleClickItem('job', job.name, index)"
+          :class="activeJobId === index ? 'active' : ''"
+        >
+          {{ job.name }}
+        </div>
       </div>
     </div>
     <div id="price">
       <div class="title">价格</div>
       <div class="choose-box">
-        <div class="choose-item" v-for="price in priceList" :key="price">{{ price }}</div>
+        <div
+          class="choose-item"
+          v-for="(price, index) in priceList"
+          :key="price"
+          @click="handleClickItem('price', price, index)"
+          :class="activePriceId === index ? 'active' : ''"
+        >
+          {{ price }}
+        </div>
       </div>
     </div>
     <div class="bottom">
       <button class="cancel" @click="handleClickCancel">取消</button>
-      <button class="comfirm">确定</button>
+      <button class="comfirm" @click="handleClickComfirm">确定</button>
     </div>
   </div>
 </template>
@@ -30,7 +54,7 @@ import api from '@/api/index'
 import { onMounted, ref } from 'vue'
 export default {
   name: 'chessSearchPop',
-  emit: ['searchPopCancel'],
+  emit: ['searchPopCancel', 'searchPopComfirm'],
   setup(props, { emit }) {
     // 查询羁绊列表
     const raceList = ref([])
@@ -51,16 +75,57 @@ export default {
       })
     }
     // 设置价格列表
-    const priceList = ref([1, 2, 3, 4, 5])
+    const priceList = ref(['1', '2', '3', '4', '5'])
     // 处理点击取消，事件委托给父 设置show隐藏
     const handleClickCancel = () => {
       emit('searchPopCancel')
+    }
+    // 处理单击确定，事件委托给父，根据查询条件显示信息
+    const handleClickComfirm = () => {
+      emit('searchPopComfirm', queryList.value)
+    }
+    // 开始实现选项点击
+    const activeRaceId = ref(-1) // 控制羁绊选中
+    const activeJobId = ref(-1) // 控制职业选中
+    const activePriceId = ref(-1) // 控制价格选中
+    const queryList = ref(['', '', '']) // 查询参数 顺序为 race job price
+    /* from：点击的是race，job，还是price
+    val：传递的查询值
+    index：选中的index  */
+    const handleClickItem = (from, val, index) => {
+      switch (from) {
+        case 'race':
+          activeRaceId.value = index
+          queryList.value[0] = val
+          break
+        case 'job':
+          activeJobId.value = index
+          queryList.value[1] = val
+          break
+        case 'price':
+          activePriceId.value = index
+          queryList.value[2] = val
+      }
+      console.log(queryList.value)
     }
     onMounted(() => {
       getRaceList()
       getJobList()
     })
-    return { raceList, getRaceList, jobList, getJobList, priceList, handleClickCancel }
+    return {
+      raceList,
+      getRaceList,
+      jobList,
+      getJobList,
+      priceList,
+      handleClickCancel,
+      handleClickComfirm,
+      handleClickItem,
+      activeRaceId,
+      activeJobId,
+      activePriceId,
+      queryList
+    }
   }
 }
 </script>
@@ -69,7 +134,7 @@ export default {
 .chess-pop-container {
   padding: 2rem 1.25rem 0 1.25rem;
   .active {
-    background: rgb(32, 32, 32);
+    background: #21ad73;
     color: white;
   }
   .title {

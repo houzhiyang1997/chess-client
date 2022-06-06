@@ -38,7 +38,7 @@
     <!-- 侧边筛选 -->
     <div class="right-bar">
       <van-popup v-model:show="show" position="right" :style="{ height: '80%', width: '80%' }" round>
-        <chess-search-pop @searchPopCancel="handlePopCancel"></chess-search-pop>
+        <chess-search-pop @searchPopCancel="handlePopCancel" @searchPopComfirm="handlePopComfirm"></chess-search-pop>
       </van-popup>
     </div>
   </div>
@@ -46,7 +46,7 @@
 
 <script>
 import chessSearchPop from '@/components/InfoLib/ChessSearchPop.vue'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/api/index'
 export default {
@@ -57,6 +57,8 @@ export default {
     const router = useRouter()
     // 搜索框双向绑定值
     const searchValue = ref('')
+    // 弹出层查询值
+    const popValue = ref('')
     // 获取所有英雄列表
     const allChess = ref([])
     const getAllChess = async () => {
@@ -66,6 +68,16 @@ export default {
     }
     // 模糊查询英雄
     const computedChess = computed(() => {
+      console.log('计算属性触发了')
+      if (queryList.race !== '' || queryList.job !== '' || queryList.price !== '') {
+        return allChess.value.filter(
+          item =>
+            (item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)) &&
+            item.jobs.includes(queryList.job) &&
+            item.races.includes(queryList.race) &&
+            item.price.toString().includes(queryList.price)
+        )
+      }
       return allChess.value.filter(
         item => item.title.includes(searchValue.value) || item.displayName.includes(searchValue.value)
       )
@@ -77,6 +89,19 @@ export default {
     }
     // 处理子组件传来的取消关闭
     const handlePopCancel = () => {
+      show.value = false
+    }
+    // 处理子组件传来的查询条件
+    const queryList = reactive({
+      race: '',
+      job: '',
+      price: ''
+    }) // 顺序为 race job price
+    const handlePopComfirm = val => {
+      queryList.race = val[0]
+      queryList.job = val[1]
+      queryList.price = val[2]
+      console.log(queryList)
       show.value = false
     }
     // 点击英雄跳转详情
@@ -92,6 +117,7 @@ export default {
     })
     return {
       searchValue,
+      popValue,
       allChess,
       getAllChess,
       computedChess,
@@ -99,7 +125,9 @@ export default {
       computedRJ,
       show,
       showPopup,
-      handlePopCancel
+      handlePopCancel,
+      handlePopComfirm,
+      queryList
     }
   }
 }
