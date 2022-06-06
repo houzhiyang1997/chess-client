@@ -37,8 +37,8 @@
     </div>
     <!-- 侧边筛选 -->
     <div class="right-bar">
-      <van-popup v-model:show="show" position="right" :style="{ height: '70%', width: '80%' }" round>
-        <chess-search-pop></chess-search-pop>
+      <van-popup v-model:show="show" position="right" :style="{ height: '80%', width: '80%' }" round>
+        <chess-search-pop @searchPopCancel="handlePopCancel"></chess-search-pop>
       </van-popup>
     </div>
   </div>
@@ -75,6 +75,10 @@ export default {
     const showPopup = () => {
       show.value = true
     }
+    // 处理子组件传来的取消关闭
+    const handlePopCancel = () => {
+      show.value = false
+    }
     // 点击英雄跳转详情
     const handleClickChess = chessId => {
       router.push(`/chessinforefresh/${chessId}`)
@@ -94,7 +98,8 @@ export default {
       handleClickChess,
       computedRJ,
       show,
-      showPopup
+      showPopup,
+      handlePopCancel
     }
   }
 }

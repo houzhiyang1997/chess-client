@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="bottom">
-      <button class="cancel">取消</button>
+      <button class="cancel" @click="handleClickCancel">取消</button>
       <button class="comfirm">确定</button>
     </div>
   </div>
@@ -29,7 +29,9 @@
 import api from '@/api/index'
 import { onMounted, ref } from 'vue'
 export default {
-  setup() {
+  name: 'chessSearchPop',
+  emit: ['searchPopCancel'],
+  setup(props, { emit }) {
     // 查询羁绊列表
     const raceList = ref([])
     const getRaceList = async () => {
@@ -50,18 +52,22 @@ export default {
     }
     // 设置价格列表
     const priceList = ref([1, 2, 3, 4, 5])
+    // 处理点击取消，事件委托给父 设置show隐藏
+    const handleClickCancel = () => {
+      emit('searchPopCancel')
+    }
     onMounted(() => {
       getRaceList()
       getJobList()
     })
-    return { raceList, getRaceList, jobList, getJobList, priceList }
+    return { raceList, getRaceList, jobList, getJobList, priceList, handleClickCancel }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .chess-pop-container {
-  padding: 3rem 1.25rem;
+  padding: 2rem 1.25rem 0 1.25rem;
   .active {
     background: rgb(32, 32, 32);
     color: white;
@@ -86,8 +92,9 @@ export default {
   .bottom {
     margin-top: 3.125rem;
     button {
+      text-align: center;
       font-size: 0.875rem;
-      margin-right: 1.25rem;
+      margin-right: 1.875rem;
       width: 6.25rem;
       color: white;
       border: 0;
