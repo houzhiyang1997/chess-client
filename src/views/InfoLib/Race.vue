@@ -24,6 +24,7 @@
             :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + item.TFTID + '.png'"
             v-for="(item, index2) in filterChess(rj.name)"
             :key="index2"
+            @click="handleClickImg(item.chessId)"
           />
         </div>
       </div>
@@ -34,9 +35,11 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/api/index'
 export default {
   setup() {
+    const router = useRouter()
     // 查询羁绊列表
     const raceList = ref([])
     const getRaceList = async () => {
@@ -69,6 +72,10 @@ export default {
         return raceList.value
       }
     })
+    // 跳转到棋子详情页
+    const handleClickImg = chessId => {
+      router.push(`/chessinforefresh/${chessId}`)
+    }
     onMounted(async () => {
       await getChessList()
       getRaceList()
@@ -83,7 +90,8 @@ export default {
       getChessList,
       filterChess,
       isJobList,
-      computeRaceOrJob
+      computeRaceOrJob,
+      handleClickImg
     }
   }
 }
