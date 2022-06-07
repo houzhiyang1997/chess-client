@@ -20,12 +20,26 @@ const routes = [
       { path: 'smallhero', component: () => import('@/views/InfoLib/SmallHero.vue') }
     ]
   },
-  { path: '/aboutme', component: () => import('@/views/AboutMe.vue') }
+  { path: '/aboutme', component: () => import('@/views/AboutMe.vue') },
+  { path: '/login', component: () => import('@/views/Login.vue') }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/aboutme') {
+    const token = localStorage.getItem('token')
+    if (token) {
+      next() // 访问的是后台主页，且有 token的值
+    } else {
+      next('/login') // 访问的是后台主页，但是没有token的值
+    }
+  } else {
+    next() // 访问的不是后台主页，直接放行
+  }
 })
 
 export default router
