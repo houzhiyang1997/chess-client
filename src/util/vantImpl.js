@@ -13,7 +13,8 @@ import {
   Popup,
   Tab,
   Tabs,
-  TreeSelect
+  TreeSelect,
+  Sticky
 } from 'vant'
 const config = [
   Tabbar,
@@ -30,6 +31,7 @@ const config = [
   Popup,
   Tab,
   Tabs,
-  TreeSelect
+  TreeSelect,
+  Sticky
 ]
 export default config

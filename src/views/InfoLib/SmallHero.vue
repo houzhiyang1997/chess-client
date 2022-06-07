@@ -6,7 +6,7 @@
         <van-search class="search-input" v-model="searchValue" shape="round" placeholder="搜索" />
       </div>
     </div>
-    <div class="hero-list" v-for="(mini, index) in formatHeroList" :key="index">
+    <div class="hero-list" v-for="(mini, index) in computedAllHero" :key="index">
       <div class="title">{{ mini[0][0].mini }}</div>
       <div class="hero-item" v-for="(item, index2) in mini" :key="index2">
         <div class="img-list">
@@ -19,7 +19,7 @@
             }"
           >
             <div class="quality">{{ ele.quality }}</div>
-            <div class="star">{{ '☆'.repeat(ele.star) }}</div>
+            <div class="star">{{ '★'.repeat(ele.star) }}</div>
           </div>
         </div>
         <div class="hero-name">{{ item[0].type + ' ' + item[0].mini }}</div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import api from '@/api/index'
 export default {
   setup() {
@@ -42,14 +42,11 @@ export default {
       const { data: res } = await api.getAllHero()
       console.log(res)
       allHero.value = res.allHero
-      formatHeroList.value = formatHero(allHero.value)
-      console.log(formatHeroList.value)
     }
 
     /* 开始构造数据 目标结构为 [miniId1[[typeId1],[typeId2]],
     [miniId2[],[]],
     [miniId3[],[]]] */
-    const formatHeroList = ref([])
     const formatHero = origin => {
       // 1.先获取miniId列表
       const miniIdList = [...new Set(origin.map(item => item.miniId))]
@@ -72,10 +69,14 @@ export default {
       })
       return result
     }
+    // 开始筛选搜索
+    const computedAllHero = computed(() => {
+      return formatHero(allHero.value.filter(item => item.name.includes(searchValue.value)))
+    })
     onMounted(() => {
       getAllHero()
     })
-    return { searchValue, getAllHero, formatHero, formatHeroList }
+    return { searchValue, getAllHero, formatHero, computedAllHero }
   }
 }
 </script>
@@ -104,21 +105,22 @@ export default {
           display: flex;
           justify-content: space-between;
           .quality {
-            font-size: 1rem;
-            height: 1.25rem;
-            background: rgba(221, 216, 216, 0.644);
+            display: flex;
+            align-items: flex-end;
+            font-size: 0.75rem;
+            padding: 0.3125rem 0.3125rem;
             color: rgb(241, 177, 14);
           }
           .star {
             display: flex;
             align-items: flex-end;
-            color: silver;
+            color: #c6aa4f;
             padding: 0.1625rem 0.3125rem;
           }
         }
       }
       .hero-name {
-        padding: 0.3125rem 0;
+        padding: 0.625rem 0 1.25rem 0;
         font-size: 1rem;
         text-align: center;
       }
