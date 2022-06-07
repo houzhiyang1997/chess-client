@@ -14,7 +14,9 @@ import {
   Tab,
   Tabs,
   TreeSelect,
-  Sticky
+  Sticky,
+  DropdownMenu,
+  DropdownItem
 } from 'vant'
 const config = [
   Tabbar,
@@ -32,6 +34,8 @@ const config = [
   Tab,
   Tabs,
   TreeSelect,
-  Sticky
+  Sticky,
+  DropdownMenu,
+  DropdownItem
 ]
 export default config
