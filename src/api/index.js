@@ -103,6 +103,22 @@ const getSimilar = (jobs, races, id) => {
   })
 }
 
+// 获取全部hex列表
+const getAllHex = () => {
+  return http({
+    method: 'GET',
+    url: '/getallhex'
+  })
+}
+
+// 获取全部小小英雄列表
+const getAllHero = () => {
+  return http({
+    method: 'GET',
+    url: '/getallhero'
+  })
+}
+
 // 根据equipid获取海克斯详情
 const getHexById = id => {
   return http({
@@ -125,5 +141,7 @@ export default {
   getHexById,
   getAllRace,
   getAllJob,
-  getAllEquip
+  getAllEquip,
+  getAllHex,
+  getAllHero
 }

@@ -110,6 +110,10 @@ export default {
     font-weight: 600;
   }
   .top {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 2.55rem;
     padding: 0.3125rem 0.625rem;
     background: rgb(241, 241, 241);
     display: flex;
@@ -123,6 +127,7 @@ export default {
     }
   }
   .race-list {
+    margin-top: 4.5rem;
     .item {
       padding: 0.625rem 1.25rem;
       display: flex;
