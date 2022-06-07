@@ -30,13 +30,24 @@
 
 <script>
 import { ref } from 'vue'
+import api from '@/api/index'
+import { Toast } from 'vant'
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
+    const router = useRouter()
     const username = ref('')
     const password = ref('')
-    const onSubmit = values => {
-      console.log('submit', values.username)
+    const onSubmit = async values => {
+      const { data: res } = await api.login(values.username, values.password)
+      if (res.code === 401) Toast('用户名或密码错误')
+      if (res.code === 402) Toast('登陆失败')
+      Toast('登陆成功')
+      // 1、将登陆成功之后的token，保存到客户端的sessionStorage中,进行身份验证
+      window.localStorage.setItem('token', res.token)
+      // 2、通过编程式导航跳转到me
+      router.replace('/aboutme')
     }
 
     return {

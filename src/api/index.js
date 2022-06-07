@@ -127,6 +127,17 @@ const getHexById = id => {
   })
 }
 
+const login = (username, password) => {
+  return http({
+    method: 'POST',
+    url: '/login',
+    data: {
+      username: username,
+      password: password
+    }
+  })
+}
+
 export default {
   getNews,
   getDetailById,
@@ -143,5 +154,6 @@ export default {
   getAllJob,
   getAllEquip,
   getAllHex,
-  getAllHero
+  getAllHero,
+  login
 }
