@@ -33,19 +33,23 @@ import { ref } from 'vue'
 import api from '@/api/index'
 import { Toast } from 'vant'
 import { useRouter } from 'vue-router'
-
+import { useStore } from 'vuex'
 export default {
   setup() {
+    const store = useStore()
     const router = useRouter()
     const username = ref('')
     const password = ref('')
     const onSubmit = async values => {
       const { data: res } = await api.login(values.username, values.password)
-      if (res.code === 401) Toast('用户名或密码错误')
-      if (res.code === 402) Toast('登陆失败')
+      if (res.code === 401) return Toast('用户名或密码错误')
+      if (res.code === 402) return Toast('登陆失败')
+      console.log(res)
       Toast('登陆成功')
       // 1、将登陆成功之后的token，保存到客户端的sessionStorage中,进行身份验证
       window.localStorage.setItem('token', res.token)
+      // 存入vuex
+      store.commit('setUserInfo', res.data)
       // 2、通过编程式导航跳转到me
       router.replace('/aboutme')
     }

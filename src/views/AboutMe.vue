@@ -1,9 +1,15 @@
 <template>
-  <div>me</div>
+  <div>me--{{ store.state.userInfo.id + '-----' + store.state.userInfo.username }}</div>
 </template>
 
 <script>
-export default {}
+import { useStore } from 'vuex'
+export default {
+  setup() {
+    const store = useStore()
+    return { store }
+  }
+}
 </script>
 
 <style lang="less" scoped></style>
