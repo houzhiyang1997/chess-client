@@ -4,6 +4,7 @@ import {
   Search,
   List,
   Cell,
+  CellGroup,
   NavBar,
   Icon,
   Button,
@@ -18,8 +19,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Form,
-  Field,
-  CellGroup
+  Field
 } from 'vant'
 const config = [
   Tabbar,
@@ -27,6 +27,7 @@ const config = [
   Search,
   List,
   Cell,
+  CellGroup,
   NavBar,
   Icon,
   Button,
@@ -41,7 +42,6 @@ const config = [
   DropdownMenu,
   DropdownItem,
   Form,
-  Field,
-  CellGroup
+  Field
 ]
 export default config

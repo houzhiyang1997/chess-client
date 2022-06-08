@@ -32,10 +32,12 @@
 import { ref } from 'vue'
 import api from '@/api/index'
 import { Toast } from 'vant'
+import { hiddenFooter } from '@/hooks/useHidden.js'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
   setup() {
+    hiddenFooter()
     const store = useStore()
     const router = useRouter()
     const username = ref('')
@@ -65,7 +67,10 @@ export default {
 
 <style lang="less" scoped>
 .login-container {
-  // background: rgb(99, 170, 99);
+  background-image: url(https://game.gtimg.cn/images/lol/act/a20220526set7/head-inner.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
   display: flex;

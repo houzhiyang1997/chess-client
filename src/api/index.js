@@ -126,7 +126,7 @@ const getHexById = id => {
     url: `/gethexinfo?hexId=${id}`
   })
 }
-
+// 登录
 const login = (username, password) => {
   return http({
     method: 'POST',
@@ -135,6 +135,14 @@ const login = (username, password) => {
       username: username,
       password: password
     }
+  })
+}
+
+// 根据id获取用户详情
+const getUserById = id => {
+  return http({
+    method: 'GET',
+    url: `/getuserinfo?id=${id}`
   })
 }
 
@@ -155,5 +163,6 @@ export default {
   getAllEquip,
   getAllHex,
   getAllHero,
-  login
+  login,
+  getUserById
 }
