@@ -19,7 +19,8 @@ import {
   DropdownMenu,
   DropdownItem,
   Form,
-  Field
+  Field,
+  Picker
 } from 'vant'
 const config = [
   Tabbar,
@@ -42,6 +43,7 @@ const config = [
   DropdownMenu,
   DropdownItem,
   Form,
-  Field
+  Field,
+  Picker
 ]
 export default config

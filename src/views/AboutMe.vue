@@ -14,7 +14,7 @@
         <van-cell-group inset>
           <van-cell title="等级" :value="userInfo[0].level" center icon="medal-o" />
           <van-cell title="积分" :value="userInfo[0].score" center icon="gem-o" />
-          <van-cell title="对弈赛季" center icon="flag-o" is-link />
+          <van-cell title="对弈赛季" center icon="flag-o" is-link @click="showPicker = true" />
           <van-cell title="收藏阵容" center icon="newspaper-o" is-link />
           <van-cell title="吐槽反馈" center icon="bulb-o" is-link />
           <van-cell title="关于云顶小助手" center icon="star-o" is-link />
@@ -23,6 +23,9 @@
       <div class="btn">
         <van-button round block type="primary" @click="handleLogOut"> 退出登录 </van-button>
       </div>
+      <van-popup v-model:show="showPicker" round position="bottom">
+        <van-picker title="赛季选择" :columns="columns" @cancel="showPicker = false" @confirm="onConfirm" />
+      </van-popup>
     </div>
   </div>
 </template>
@@ -78,11 +81,37 @@ export default {
       console.log(res)
       userInfo.value = res.userInfo
     }
+    // 赛季选择弹出框
+    const columns = [
+      { text: 'S7-巨龙之境', val: '12.11' },
+      { text: 'S6-霓虹之夜', val: '12.9' },
+      { text: '等待更新', disabled: true }
+    ]
+    const result = ref('')
+    const showPicker = ref(false)
+
+    const onConfirm = value => {
+      store.commit('setVersion', value.val)
+      result.value = value
+      showPicker.value = false
+      router.push('/')
+    }
     onMounted(() => {
       getUserInfo(store.state.userInfo.id)
       handleScroll()
     })
-    return { store, handleScroll, topBg, handleLogOut, getUserInfo, userInfo }
+    return {
+      store,
+      handleScroll,
+      topBg,
+      handleLogOut,
+      getUserInfo,
+      userInfo,
+      result,
+      columns,
+      onConfirm,
+      showPicker
+    }
   }
 }
 </script>

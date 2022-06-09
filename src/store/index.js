@@ -23,7 +23,7 @@ export default createStore({
       username: ''
     },
     // 控制信息对应游戏版本
-    version: '12.9'
+    version: '12.11'
   },
   getters: {},
   mutations: {
@@ -42,6 +42,10 @@ export default createStore({
     setUserInfo(state, val) {
       state.userInfo.id = val.id
       state.userInfo.username = val.username
+    },
+    // 版本控制
+    setVersion(state, val) {
+      state.version = val
     }
   },
   actions: {},

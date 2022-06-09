@@ -91,6 +91,7 @@ export default {
     .hex-item {
       display: flex;
       margin-bottom: 1.25rem;
+      padding: 0.625rem 0.625rem;
       .left {
         img {
           width: 3rem;

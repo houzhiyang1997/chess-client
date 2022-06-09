@@ -259,12 +259,12 @@ export default {
         margin: 0 0.625rem;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        width: 6.25rem;
         .name {
           font-size: 1rem;
+          margin-right: 0.625rem;
         }
         i {
+          margin-right: 0.625rem;
           font-size: 0.75rem;
           color: goldenrod;
         }

@@ -132,7 +132,6 @@ export default {
       padding: 0.625rem 1.25rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       .left {
         flex: 1.1;
         margin-right: 1.875rem;
@@ -156,7 +155,9 @@ export default {
       .right {
         flex: 1;
         display: flex;
+        height: 100%;
         flex-wrap: wrap;
+        margin-top: 1.75rem;
         img {
           width: 2rem;
           margin: 0.125rem 0.125rem;
