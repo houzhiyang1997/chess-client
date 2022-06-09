@@ -1,10 +1,10 @@
 <template>
   <div class="team-container">
-    <div class="top">霓虹之夜</div>
+    <div class="top">阵容数据榜</div>
     <div class="content">
       <div class="content-top">
         <div class="title">推荐阵容</div>
-        <div class="info">版本:12.9 赛季:S6.5</div>
+        <div class="info" @click="showPicker = true">点此可切换赛季版本</div>
       </div>
       <div class="main">
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -12,11 +12,16 @@
         </van-list>
       </div>
     </div>
+    <van-popup v-model:show="showPicker" round position="bottom">
+      <van-picker title="赛季选择" :columns="columns" @cancel="showPicker = false" @confirm="onConfirm" />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import teamItem from '@/components/Team/TeamItem.vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import api from '@/api/index'
 import { ref } from 'vue'
 
@@ -26,6 +31,9 @@ export default {
     teamItem
   },
   setup() {
+    const store = useStore()
+    const router = useRouter()
+    //
     const teamList = ref([])
     const loading = ref(false)
     const finished = ref(false)
@@ -46,12 +54,32 @@ export default {
       finished.value = true
     }
 
+    // 赛季选择弹出框
+    const columns = [
+      { text: 'S7-巨龙之境', val: '12.11' },
+      { text: 'S6-霓虹之夜', val: '12.9' },
+      { text: '等待更新', disabled: true }
+    ]
+    const result = ref('')
+    const showPicker = ref(false)
+
+    const onConfirm = value => {
+      store.commit('setVersion', value.val)
+      result.value = value
+      showPicker.value = false
+      router.go(0)
+    }
+
     return {
       teamList,
       onLoad,
       loading,
       finished,
-      getTeam
+      getTeam,
+      columns,
+      result,
+      showPicker,
+      onConfirm
     }
   }
 }

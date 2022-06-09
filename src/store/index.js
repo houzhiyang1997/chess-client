@@ -6,7 +6,8 @@ export default createStore({
       // reducer 可以选择存储哪些state
       reducer: state => {
         return {
-          userInfo: state.userInfo
+          userInfo: state.userInfo,
+          version: state.version
         }
       }
     })
