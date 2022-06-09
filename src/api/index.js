@@ -1,4 +1,5 @@
 import http from '@/util/http.js'
+import store from '@/store/index.js'
 
 // 获取全部新闻列表
 const getNews = () => {
@@ -20,15 +21,15 @@ const getDetailById = id => {
 const getTeams = () => {
   return http({
     method: 'GET',
-    url: '/getteams'
+    url: `/getteams?version=${store.state.version}`
   })
 }
 
-// 获取阵容信息
+// 获取阵容信息byId
 const getTeamById = teamId => {
   return http({
     method: 'GET',
-    url: `getteambyid?teamId=${teamId}`
+    url: `getteambyid?teamId=${teamId}&version=${store.state.version}`
   })
 }
 
@@ -36,14 +37,14 @@ const getTeamById = teamId => {
 const getAllChess = () => {
   return http({
     method: 'GET',
-    url: '/getallchess'
+    url: `/getallchess?version=${store.state.version}`
   })
 }
 // 根据chessid获取英雄详情
 const getChessById = id => {
   return http({
     method: 'GET',
-    url: `/getchessinfo?chessId=${id}`
+    url: `/getchessinfo?chessId=${id}&version=${store.state.version}`
   })
 }
 
@@ -51,7 +52,7 @@ const getChessById = id => {
 const getAllRace = () => {
   return http({
     method: 'GET',
-    url: '/getallrace'
+    url: `/getallrace?version=${store.state.version}`
   })
 }
 
@@ -59,7 +60,7 @@ const getAllRace = () => {
 const getRaceById = id => {
   return http({
     method: 'GET',
-    url: `/getraceinfo?raceId=${id}`
+    url: `/getraceinfo?raceId=${id}&version=${store.state.version}`
   })
 }
 
@@ -67,7 +68,7 @@ const getRaceById = id => {
 const getAllJob = () => {
   return http({
     method: 'GET',
-    url: '/getalljob'
+    url: `/getalljob?version=${store.state.version}`
   })
 }
 
@@ -75,7 +76,7 @@ const getAllJob = () => {
 const getJobById = id => {
   return http({
     method: 'GET',
-    url: `/getjobinfo?jobId=${id}`
+    url: `/getjobinfo?jobId=${id}&version=${store.state.version}`
   })
 }
 
@@ -83,7 +84,7 @@ const getJobById = id => {
 const getAllEquip = () => {
   return http({
     method: 'GET',
-    url: '/getallequip'
+    url: `/getallequip?version=${store.state.version}`
   })
 }
 
@@ -91,7 +92,7 @@ const getAllEquip = () => {
 const getEquipById = id => {
   return http({
     method: 'GET',
-    url: `/getequipinfo?equipId=${id}`
+    url: `/getequipinfo?equipId=${id}&version=${store.state.version}`
   })
 }
 
@@ -99,7 +100,7 @@ const getEquipById = id => {
 const getSimilar = (jobs, races, id) => {
   return http({
     method: 'GET',
-    url: `/getsimilar?jobs=${jobs}&races=${races}&id=${id}`
+    url: `/getsimilar?jobs=${jobs}&races=${races}&id=${id}&version=${store.state.version}`
   })
 }
 
@@ -107,7 +108,15 @@ const getSimilar = (jobs, races, id) => {
 const getAllHex = () => {
   return http({
     method: 'GET',
-    url: '/getallhex'
+    url: `/getallhex?version=${store.state.version}`
+  })
+}
+
+// 根据id获取海克斯详情
+const getHexById = id => {
+  return http({
+    method: 'GET',
+    url: `/gethexinfo?hexId=${id}&version=${store.state.version}`
   })
 }
 
@@ -119,13 +128,6 @@ const getAllHero = () => {
   })
 }
 
-// 根据equipid获取海克斯详情
-const getHexById = id => {
-  return http({
-    method: 'GET',
-    url: `/gethexinfo?hexId=${id}`
-  })
-}
 // 登录
 const login = (username, password) => {
   return http({

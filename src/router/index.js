@@ -42,4 +42,10 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+// 巧用路由守卫
+// 添加这段是为了让路由跳转后回到顶部
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0)
+})
+
 export default router

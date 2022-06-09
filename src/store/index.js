@@ -21,7 +21,9 @@ export default createStore({
     userInfo: {
       id: 0,
       username: ''
-    }
+    },
+    // 控制信息对应游戏版本
+    version: '12.9'
   },
   getters: {},
   mutations: {
