@@ -1,9 +1,9 @@
 <template>
   <div class="team-container">
-    <div class="top">阵容数据榜</div>
+    <div class="top">{{ store.state.version === '12.11' ? '巨龙之境' : '霓虹之夜' }}</div>
     <div class="content">
       <div class="content-top">
-        <div class="title">推荐阵容</div>
+        <div class="title">推荐阵容 版本：{{ store.state.version }}</div>
         <div class="info" @click="showPicker = true">点此可切换赛季版本</div>
       </div>
       <div class="main">
@@ -71,6 +71,7 @@ export default {
     }
 
     return {
+      store,
       teamList,
       onLoad,
       loading,

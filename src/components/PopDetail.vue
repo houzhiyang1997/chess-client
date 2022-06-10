@@ -10,7 +10,7 @@
           <div class="content">{{ info.description }}</div>
         </div>
       </div>
-      <div class="bottom" v-if="info.formula">
+      <div class="bottom" v-if="info.formula && info.formula.length !== 0">
         <div class="title">合成路径</div>
         <div class="main">
           <img :src="info.formula[0].imagePath" />
