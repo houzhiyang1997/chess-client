@@ -342,6 +342,7 @@ export default {
       secondEquip: []
     })
     const getCarryChess = (origin, carryId) => {
+      // 主C ID不能乱给，必须在阵容列表棋子中，不然filter为空，这样后面的关于主C副C的东西全为underfind
       const result = origin.filter(item => item.chessId === parseInt(carryId))
       return result[0]
     }

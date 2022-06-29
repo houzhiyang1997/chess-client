@@ -7,7 +7,6 @@ const routes = [
   { path: '/team', component: () => import('@/views/Team.vue') },
   { path: '/chessinforefresh/:id', component: () => import('@/views/Team/ChessInfoRefresh.vue'), props: true },
   { path: '/teamdetail/:teamId', component: () => import('@/views/Team/TeamDetail.vue'), props: true },
-  { path: '/databoard', component: () => import('@/views/DataBoard.vue') },
   {
     path: '/infolib',
     redirect: '/infolib/chess',
