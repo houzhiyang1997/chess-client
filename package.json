@@ -13,6 +13,7 @@
     "mitt": "^3.0.0",
     "vant": "^3.4.9",
     "vue": "^3.2.13",
+    "vue-lazyload": "^3.0.0-rc.2",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
     "vuex-persistedstate": "^4.1.0"

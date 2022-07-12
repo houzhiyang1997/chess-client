@@ -3,8 +3,8 @@
     <div class="title">装备列表</div>
     <div class="equip-list">
       <div class="equip-item" v-for="equip in allEquip" :key="equip.equipId">
-        <div class="left">
-          <img :src="equip.imagePath" />
+        <div class="left" v-lazy-container="{ selector: 'img' }">
+          <img :data-src="equip.imagePath" />
         </div>
         <div class="right">
           <div class="name">{{ equip.name }}</div>
@@ -49,6 +49,7 @@ export default {
     font-weight: 600;
   }
   .equip-list {
+    margin-bottom: 52px;
     .equip-item {
       display: flex;
       margin-bottom: 1.25rem;

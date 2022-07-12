@@ -7,8 +7,8 @@
     </div>
     <div class="hex-list">
       <div class="hex-item" v-for="hex in computeLevelList" :key="hex.id">
-        <div class="left">
-          <img :src="hex.imgUrl" />
+        <div class="left" v-lazy-container="{ selector: 'img' }">
+          <img :data-src="hex.imgUrl" />
         </div>
         <div class="right">
           <div class="name">{{ hex.name }}</div>

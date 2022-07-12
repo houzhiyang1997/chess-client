@@ -25,9 +25,7 @@
         @click="handleClickChess(chess.chessId)"
         v-for="(chess, index) in computedChess"
         :key="chess.chessId"
-        :style="{
-          backgroundImage: 'url(http://game.gtimg.cn/images/lol/tft/cham-icons/624x318/' + chess.TFTID + '.jpg)'
-        }"
+        v-lazy:background-image="'http://game.gtimg.cn/images/lol/tft/cham-icons/624x318/' + chess.TFTID + '.jpg'"
       >
         <div class="title">{{ chess.title }}</div>
         <div class="displayName">
@@ -47,8 +45,9 @@
         v-for="chess in computedChess"
         :key="chess.chessId"
         @click="handleClickChess(chess.chessId)"
+        v-lazy-container="{ selector: 'img' }"
       >
-        <img :src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + chess.TFTID + '.png'" />
+        <img :data-src="'https://game.gtimg.cn/images/lol/act/img/tft/champions/' + chess.TFTID + '.png'" />
         <div class="name">{{ chess.displayName }}</div>
         <div class="races">
           <div class="item" v-for="race in chess.races.split(',')" :key="race">{{ race }}</div>

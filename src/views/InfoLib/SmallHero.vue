@@ -19,14 +19,10 @@
       <div class="title">{{ mini[0][0].mini }}</div>
       <div class="hero-item" v-for="(item, index2) in mini" :key="index2">
         <div class="img-list">
-          <div
-            class="hero"
-            v-for="(ele, index3) in item"
-            :key="index3"
-            :style="{
+          <div class="hero" v-for="(ele, index3) in item" :key="index3" v-lazy:background-image="ele.imagePath">
+            <!-- :style="{
               backgroundImage: 'url(' + ele.imagePath + ')'
-            }"
-          >
+            }" -->
             <div class="quality">{{ ele.quality }}</div>
             <div class="star">{{ '★'.repeat(ele.star) }}</div>
           </div>
